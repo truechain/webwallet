@@ -10,7 +10,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "dev": "next",
+    "dev": "next -p 12300",
     "build": "next build",
     "start": "next start"
   },
