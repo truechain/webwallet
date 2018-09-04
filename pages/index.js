@@ -5,7 +5,7 @@ import ImportAccount from '../comps/import-account'
 const Index = () =>(
     <Layout nav={'index'}>
 	    <div className='index'>
-            <CreateAccount></CreateAccount>
+            <CreateAccount step='init'></CreateAccount>
             <ImportAccount></ImportAccount>
         </div>
         <style jsx>{`
