@@ -1,7 +1,10 @@
+import Layout from '../comps/layout'
+
+
 const Index = () =>(
-    <div>
-        <p>hello ,next.js</p>
-    </div>
+    <Layout nav={'index'}>
+	    <p>导入创建</p>
+    </Layout>
 )
 
 export default Index
