@@ -6,6 +6,7 @@ import { withRouter } from 'next/router'
 
 const log = console.log
 
+
 class Layout extends React.Component {
 
     constructor(props) {
@@ -26,6 +27,18 @@ class Layout extends React.Component {
     
     render(){
         const { state, props } = this
+        const headerRight = [
+            {descr:'当前语言',detail:'中文'},
+            {descr:'当前连接以太坊节点',detail:'infura'},
+            {descr:'当前网络平均gas价格',detail:'4gwei'},
+        ]
+        const navs = [
+            {label:'创建/导入钱包',val:'index'},
+            {label:'发送以太坊/代币',val:'transfer'},
+            {label:'检查交易状态',val:'check-tx'},
+            {label:'查看账户',val:'check-account'},
+            {label:'帮助中心',val:'helper'},
+        ]
 
         return (
             <div className='layout'>
@@ -42,18 +55,14 @@ class Layout extends React.Component {
                             <div className='header-left-version'>v1.0.1</div>
                         </div>
                         <div className='header-right'>
-                            <p>
-                                <span className='header-right-descr'>当前语言</span>
-                                <span className='header-right-detail'>中文</span>
-                            </p>
-                            <p>
-                                <span className='header-right-descr'>当前连接以太坊节点</span>
-                                <span className='header-right-detail'>infura</span>
-                            </p>
-                            <p>
-                                <span className='header-right-descr'>当前网络平均gas价格</span>
-                                <span className='header-right-detail'>4gwei</span>
-                            </p>
+                            { 
+                                headerRight.map( item=> (
+                                    <p key={item.descr}>
+                                        <span className='header-right-descr'>{item.descr}</span>
+                                        <span className='header-right-detail'>{item.detail}</span>
+                                    </p>
+                                ) ) 
+                            }
                         </div>
                     </div>
                 </div>        
@@ -66,11 +75,9 @@ class Layout extends React.Component {
                         indicatorColor="primary"
                         textColor="primary"
                     >
-                        <Tab value='index' label="创建/导入钱包" />
-                        <Tab value='transfer' label="发送以太坊/代币" />
-                        <Tab value='check-tx' label="检查交易状态" />
-                        <Tab value='check-account' label="查看账户" />
-                        <Tab value='helper' label="帮助中心" />
+                        {
+                            navs.map( item=>(<Tab key={item.val} value={item.val} label={item.label} />) )
+                        }
                     </Tabs>
                 </div>
                 <div>
