@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import CssBaseline from '@material-ui/core/CssBaseline'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import { withRouter } from 'next/router'
@@ -47,6 +46,9 @@ class Layout extends React.Component {
                         name="viewport"
                         content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
                     />
+                    <script type="text/javascript" src="/static/lightwallet.min.js" ></script>
+                    <script src="/static/web3.min.js"></script>
+                    <script src="/static/eth-wallet-js.js"></script>
                 </Head>
                 <div className='header-wrapper'>
                     <div className='header'>
