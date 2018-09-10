@@ -4,7 +4,8 @@
   "description": "Free, open-source, client-side interface for generating Ethereum wallets &amp; more. Interact with the Ethereum blockchain easily &amp; securely.",
   "main": "index.js",
   "dependencies": {
-    "@material-ui/core": "^3.0.1",
+    "@material-ui/core": "^3.0.2",
+    "@material-ui/icons": "^3.0.1",
     "@navjobs/upload": "^3.1.3",
     "next": "^6.1.1",
     "react": "^16.4.2",

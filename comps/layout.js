@@ -3,7 +3,9 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import { withRouter } from 'next/router'
 
+
 const log = console.log
+
 
 
 class Layout extends React.Component {
@@ -11,9 +13,27 @@ class Layout extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            nav: props.nav
+            nav: props.nav,
+            gasPrice:'',
+            openSnack:props.openSnack || false,
         }
         this.navChange = this.navChange.bind(this)
+    }
+
+    componentDidMount() { // 生命周期钩子 组件渲染完成后
+       this.ewj = eth_wallet_js
+       this.web3 = this.ewj.web3
+       this.interval = setInterval(() => this.tick(), 1500);
+    }
+
+    componentWillUnmount() { // 生命周期钩子 组件卸载前清除定时器
+        clearInterval(this.interval);
+    }
+
+    tick() {        
+        this.setState({
+            gasPrice: this.ewj.gas_price_gwei+'gwei'
+        });
     }
 
     navChange(e,val){
@@ -23,13 +43,16 @@ class Layout extends React.Component {
         setTimeout( () => this.props.router.push('/'+val), 260 )
         e.preventDefault()
     }
+
+    
+    
     
     render(){
         const { state, props } = this
         const headerRight = [
-            {descr:'当前语言',detail:'中文'},
-            {descr:'当前连接以太坊节点',detail:'infura'},
-            {descr:'当前网络平均gas价格',detail:'4gwei'},
+            {descr:'当前语言',detail:'中文',key:'language'},
+            {descr:'当前连接以太坊节点',detail:'infura',key:'node'},
+            {descr:'当前网络平均gas价格',detail:state.gasPrice,key:'gasPrice'},
         ]
         const navs = [
             {label:'创建/导入钱包',val:'index'},
@@ -84,7 +107,7 @@ class Layout extends React.Component {
                 </div>
                 <div>
                     {props.children}
-                </div>
+                </div>                
                 <style jsx global>{`
                     body {
                         margin:0px;
@@ -138,7 +161,7 @@ class Layout extends React.Component {
                     .header-right-detail {
                         font-size:16px;
                         font-weigth:600;
-                    }
+                    }                    
                 `}</style>
             </div>
         )

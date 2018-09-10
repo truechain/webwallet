@@ -2,6 +2,7 @@ import Card from '@material-ui/core/Card'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Split from './split-line'
+import Snack from './snackbar'
 
 const log = console.log
 
@@ -13,7 +14,8 @@ class CreateAccount extends React.Component{
         super(props)
         this.state = { 
             step:props.step,
-            accountPwd:''
+            accountPwd:'',
+            openSnack:false,
         }
         /**step：
          *  'init':初始页面
@@ -33,8 +35,13 @@ class CreateAccount extends React.Component{
                 accountPrivatekey:privatekey,
                 accountAddress:address,
                 accountMnemonic:mnemonic,
-                accountKeystore:keystore
+                accountKeystore:keystore,
+                openSnack:true,
+                message:'创建账户成功！',
+                messageType:'success'
             })
+            let storage = window.localStorage
+            storage.setItem( 'account', JSON.stringify(res) )
         })
     }
 
@@ -47,7 +54,7 @@ class CreateAccount extends React.Component{
         const { state, props } = this
 
         return (
-            <div style={{flex:'auto',margin:'20px'}}>    
+            <div style={{flex:'auto',margin:'20px',maxWidth:'600px'}}>    
                 <Card raised={true}>
                 {
                     state.step == 'init' &&
@@ -96,11 +103,11 @@ class CreateAccount extends React.Component{
                     </div>
                 }                                  
                 </Card>
+                <Snack status={state.openSnack} message={state.message} messageType={state.messageType} />
                 <style jsx>{`
                     .create-account {
                         min-width:300px;
                         padding:20px;
-                        max-width:500px;
                     }
                     .create-account-title {
                         color:#324057;
@@ -108,6 +115,7 @@ class CreateAccount extends React.Component{
                     .save-account {
                         min-width:300px;
                         padding:20px;
+                        word-break:break-all;
                     }
                     .save-account-title {
                         color:#324057;

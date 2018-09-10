@@ -4,8 +4,11 @@ import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import TextField from '@material-ui/core/TextField'
-// import DropzoneComponent from 'react-dropzone-component'
 import { UploadField } from '@navjobs/upload'
+import Button from '@material-ui/core/Button'
+import Snack from './snackbar'
+
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const log = console.log
 
@@ -21,39 +24,222 @@ class ImportAccount extends React.Component{
                 {label:'助记词',val:'mnemonic'},
                 {label:'keystore',val:'keystore'},
             ],
+            privatekey:'',
+            showPrivatekeyBtn:false,
+            mnemonic:'',
+            showMnemonicBtn:false,
+            keystore:'',
+            keystorePwd:'',
+            showKeystoreBtn:false,
+            openSnack:false,
+            message:'',
+            messageType:'',
+            windowInnerWidth:0,
         }
-        /**step：
-         *  'init':初始页面
-         *  'save':保存账户
-         */
         log(this)
         this.handleChange = this.handleChange.bind(this)
         this.handleChangeIndex = this.handleChangeIndex.bind(this)
+        this.handlePrivatekeyInput = this.handlePrivatekeyInput.bind(this)
+        this.privatekeyToAccount = this.privatekeyToAccount.bind(this)
+        this.handleMnemonicInput = this.handleMnemonicInput.bind(this)
+        this.mnemonicToAccount = this.mnemonicToAccount.bind(this)
+        this.keystoreToAccount = this.keystoreToAccount.bind(this)
+        this.handleKeystorePwdInput = this.handleKeystorePwdInput.bind(this)
+        this.onKeystoreCome = this.onKeystoreCome.bind(this)
+        this.onKeystoreDrop = this.onKeystoreDrop.bind(this)
+        this.storeAccount = this.storeAccount.bind(this)
+        this.updateDimensions = this.updateDimensions.bind(this)
+        this.swipeableAction = this.swipeableAction.bind(this)
+        this.showCurrentAccount = this.showCurrentAccount.bind(this)
     }
 
+    // 更新窗口宽度状态
+    updateDimensions() {
+        this.setState({ windowInnerWidth: window.innerWidth });
+    }
+    componentDidMount() {
+        window.addEventListener("resize", this.updateDimensions);
+        setTimeout( ()=>{
+            this.updateDimensions()
+            this.updateSwipeHeight()
+        },200 )
+    }
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.updateDimensions);
+    }
+
+    swipeableAction(e){
+        this.updateSwipeHeight = e.updateHeight
+        e.updateHeight()
+    }
+
+    // 存储账户信息到本地
+    storeAccount(x){
+        let storage = window.localStorage
+        storage.setItem( 'account', JSON.stringify(x) )
+    }
+
+    // 显示当前账户
+    showCurrentAccount(){
+        let importWays = this.state.importWays
+        let alreadyGet = false
+        importWays.forEach(item=>{ if(item.val=='current-account'){ alreadyGet = true } })
+        if(!alreadyGet){ 
+            this.state.importWays.unshift({label:'当前账户',val:'current-account'})
+        }   
+        let storage = window.localStorage     
+        let account = JSON.parse( storage.getItem('account') ) 
+        
+        this.setState({
+            importWays:this.state.importWays,
+            value:'current-account',
+            index:0,
+            account
+        })
+    }
+
+    // 处理tab页切换时
     handleChange = (event, value) => {
-        log(value)
         this.state.importWays.forEach( (item,index)=>{
             if(item.val == value){
                 this.setState({ index,value })
             }
         } )
         
-    };
-
+    }
+    // 处理swiper tab页的滑动时
     handleChangeIndex = index => {
         let val = this.state.importWays[index].val
-        log(val)
         this.setState({ value: val });
-    };
+    }
+
+    // 输入私钥时
+    handlePrivatekeyInput(e){
+        let val =  e.target.value
+        if( (val.length==64) || (val.length==66) ){
+            this.setState({
+                privatekey:val,
+                showPrivatekeyBtn:true
+            })
+        }else{
+            this.setState({ showPrivatekeyBtn:false })
+        }
+    }
+
+    // 私钥导入账户
+    privatekeyToAccount(){
+        let comp = this
+        let privatekey = this.state.privatekey
+        eth_wallet_js.get_address_privatekey(
+            'privatekey',privatekey,
+            account=>{
+                log(account);
+                log(this)
+                this.storeAccount(account)
+                this.setState({message:'导入账户成功',openSnack:true,messageType:'success'})
+                this.showCurrentAccount()
+            }
+        )
+    }
+
+    // 输入助记词时
+    handleMnemonicInput(e){
+        let val =  e.target.value.toString()
+        let vals = val.split(' ').filter(item=>item)
+        if( vals.length==12 ){
+            this.setState({
+                mnemonic:vals.join(' '),
+                showMnemonicBtn:true
+            })
+        }else{
+            this.setState({ showMnemonicBtn:false })
+        }
+    }
+    // 助记词导入
+    mnemonicToAccount(){
+        let mnemonic = this.state.mnemonic
+        let comp = this
+        eth_wallet_js.get_address_privatekey(
+            'mnemonic',mnemonic,
+            account=>{ 
+                log(account) 
+                comp.storeAccount(account)
+                comp.setState({message:'导入账户成功',openSnack:true,messageType:'success'})
+            }
+        )
+    }
+
+    // keystore密码输入时
+    handleKeystorePwdInput(e){
+        let val = e.target.value
+        if(!val){
+            this.setState({ keystorePwd:'' })
+        }else{
+            this.setState({ keystorePwd:val })
+        }
+        
+    }
+    // 上传keystore文件时
+    onKeystoreCome(files){
+        var file = files[0]
+        let comp = this
+        let reader = new FileReader()
+        reader.onload = function(e) {
+            let text = reader.result;
+            // log(text)
+            comp.setState({ showKeystoreBtn:true,keystore:text,keystoreFileName:file.name })
+        }
+        log(file)
+        reader.readAsText(file)        
+    }
+    onKeystoreDrop(f){
+        let comp = this
+        let reader = new FileReader()
+        reader.onload = function(e) {
+            let text = reader.result;
+            // log(text)
+            comp.setState({ showKeystoreBtn:true,keystore:text,keystoreFileName:f.name })
+        }
+        reader.readAsText(f) 
+    }
+    // keystore导入
+    keystoreToAccount(){
+        let comp = this
+        let { keystore, keystorePwd } = this.state
+        eth_wallet_js.get_address_privatekey(
+            'keystore',
+            { keystore,password:keystorePwd },
+            res=>{ 
+                log(res)
+                if(!res.err){
+                    comp.storeAccount(res)
+                    comp.setState({message:'导入账户成功',openSnack:true,messageType:'success'})
+                }
+                else{
+                    comp.setState({message:'错误的密码或文件',openSnack:true,messageType:'error'})
+                }
+            }
+        )
+        
+    }
+
 
     render(){
         const { state, props } = this
+        let importantWidth = 'auto'
+        if( state.windowInnerWidth < 660 ){
+            importantWidth = (state.windowInnerWidth-110)+'px'
+        }
 
         return (
-            <div style={{flex:'auto',margin:'20px'}}>
+            <div style={{flex:'auto',margin:'20px',maxWidth:'600px'}}>
+                <Snack
+                    message={state.message}
+                    messageType={state.messageType}
+                    status={state.openSnack}
+                />
                 <Card raised={true}>
-                    <div className="import-account" >
+                    <div className="import-account" style={{ maxWidth:importantWidth }}>
                         <p className="import-account-title">导入账户</p>
                         <p className="title">你将怎样使用账户?</p>
                         <AppBar position="static" color="default">
@@ -72,48 +258,107 @@ class ImportAccount extends React.Component{
                             </Tabs>
                         </AppBar>
                         <SwipeableViews
-                            axis={'x'}
                             index={state.index}
                             onChangeIndex={this.handleChangeIndex}
+                            action={this.swipeableAction}
                         >
                         {
                             state.importWays.map( item=>(
                                 <div key={item.val} className={item.val}>
+                                { 
+                                    item.val =='current-account' &&
+                                    <div>
+                                        <AccountCircleIcon color="primary" style={{fontSize:'80px'}}></AccountCircleIcon>
+                                        <p className="account-address">{state.account.address}</p>
+                                    </div>
+                                }
                                 {
                                     item.val == 'privatekey' &&
+                                    <div style={{width:'100%'}}>
                                     <TextField 
                                         placeholder={'私钥内容'} 
                                         fullWidth={true}
-                                        type="password"
-                                        onChange={ e => state.accountPwd = e.target.value }
+                                        type="text"
+                                        onChange={this.handlePrivatekeyInput}
                                         style={{margin:'35px 0px'}}
                                     />
+                                    {
+                                        state.showPrivatekeyBtn &&
+                                        <Button 
+                                            variant="contained" 
+                                            color="primary"
+                                            fullWidth={true}
+                                            style={{color:'#fff',margin:'25px 0px'}}
+                                            onClick={this.privatekeyToAccount}
+                                        >
+                                            导入账户
+                                        </Button>
+                                    }                                    
+                                    </div>
                                 }
                                 {
                                     item.val == 'mnemonic' &&
+                                    <div style={{width:'100%'}}>
                                     <TextField 
-                                        placeholder={'助记词'} 
+                                        placeholder={'助记词(12个字符)'} 
                                         fullWidth={true}
-                                        type="password"
-                                        onChange={ e => state.accountPwd = e.target.value }
+                                        type="text"
+                                        onChange={this.handleMnemonicInput }
                                         style={{margin:'35px 0px'}}
                                     />
+                                    {
+                                        state.showMnemonicBtn &&
+                                        <Button 
+                                            variant="contained" 
+                                            color="primary"
+                                            fullWidth={true}
+                                            style={{color:'#fff',margin:'25px 0px'}}
+                                            onClick={this.mnemonicToAccount}
+                                        >
+                                            导入账户
+                                        </Button>
+                                    }
+                                    </div>
                                 }
                                 {
                                     item.val == 'keystore' &&
-                                    <div style={{margin:'35px 0px'}}>
+                                    <div style={{margin:'35px 0px 0px'}}>
                                     <UploadField
-                                        onFiles={ files =>{} }
+                                        onFiles={ this.onKeystoreCome }
                                         containerProps={{className: 'resume_import'}}
                                         uploadProps={{
                                             accept: '*/*',
                                         }}
                                     >
-                                        <div className="uploader">
-                                            <p>点击上传或者拖拽keystore文件到这里</p>
+                                        <div className="uploader" onDrop={this.onKeystoreDrop}>
+                                            {
+                                                state.keystoreFileName &&
+                                                <p>{state.keystoreFileName}</p>
+                                            }
+                                            <p>点击选择keystore文件</p>
+                                            <p>或者拖拽keystore文件到这里</p>
                                         </div>
                                     </UploadField>
-                                    </div>
+                                    <TextField 
+                                        placeholder={'之前设置的密码（未设置过则不用填）'} 
+                                        fullWidth={true}
+                                        type="password"
+                                        onChange={this.handleKeystorePwdInput }
+                                        style={{margin:'35px 0px'}}
+                                    />
+                                    {
+                                        state.showKeystoreBtn &&
+                                        <Button 
+                                            variant="contained" 
+                                            color="primary"
+                                            fullWidth={true}
+                                            style={{color:'#fff',margin:'25px 0px'}}
+                                            onClick={this.keystoreToAccount}
+                                        >
+                                            导入账户
+                                        </Button>
+                                    }
+                                    </div> 
                                 }
                                 </div>
                             ) )
@@ -123,11 +368,10 @@ class ImportAccount extends React.Component{
                 </Card>
                 <style jsx>{`
                     .import-account {
-                        min-width:300px;
+                        min-width:230px;
                         padding:20px;
                         flex:auto;
-                        margin:20px;
-                        max-width:500px;
+                        word-break:break-all;
                     }
                     .import-account-title {
                         color:#324057;
@@ -143,8 +387,23 @@ class ImportAccount extends React.Component{
                         border: 3px dashed #C7C7C7;
                         padding: 20px;
                         border-radius:8px;
-                        background-color:#E1E1E1;
+                        background-color:#EFF2F7;
                         text-align:center;
+                        color:#324057;
+                    }
+                    .current-account {
+                        display:flex;
+                        flex-direction:column;
+                        justify-content:center;
+                        align-items:center;
+                        padding:20px;
+                        text-align:center;
+                    }
+                    .account-address {
+                        text-align:center;
+                        color:#00acc1;
+                        font-size:14px;
+                        line-height:20px;
                     }
                 `}</style>
             </div>
