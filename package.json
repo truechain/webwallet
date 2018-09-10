@@ -1,6 +1,6 @@
 {
   "name": "webwallet",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Free, open-source, client-side interface for generating Ethereum wallets &amp; more. Interact with the Ethereum blockchain easily &amp; securely.",
   "main": "index.js",
   "dependencies": {
