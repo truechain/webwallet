@@ -8,7 +8,7 @@ import { UploadField } from '@navjobs/upload'
 import Button from '@material-ui/core/Button'
 import Snack from './snackbar'
 
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
 const log = console.log
 
@@ -35,8 +35,10 @@ class ImportAccount extends React.Component{
             message:'',
             messageType:'',
             windowInnerWidth:0,
+            accountEthBalance:'0',
+            accountTrueBalance:'0',
         }
-        log(this)
+        // log(this)
         this.handleChange = this.handleChange.bind(this)
         this.handleChangeIndex = this.handleChangeIndex.bind(this)
         this.handlePrivatekeyInput = this.handlePrivatekeyInput.bind(this)
@@ -55,17 +57,18 @@ class ImportAccount extends React.Component{
 
     // 更新窗口宽度状态
     updateDimensions() {
-        this.setState({ windowInnerWidth: window.innerWidth });
+        this.setState({ windowInnerWidth: window.innerWidth })
     }
     componentDidMount() {
-        window.addEventListener("resize", this.updateDimensions);
+        window.addEventListener("resize", this.updateDimensions)
         setTimeout( ()=>{
             this.updateDimensions()
             this.updateSwipeHeight()
-        },200 )
+        }, 200 )
+        this.showCurrentAccount()
     }
     componentWillUnmount() {
-        window.removeEventListener("resize", this.updateDimensions);
+        window.removeEventListener("resize", this.updateDimensions)
     }
 
     swipeableAction(e){
@@ -81,21 +84,27 @@ class ImportAccount extends React.Component{
 
     // 显示当前账户
     showCurrentAccount(){
-        let importWays = this.state.importWays
-        let alreadyGet = false
-        importWays.forEach(item=>{ if(item.val=='current-account'){ alreadyGet = true } })
-        if(!alreadyGet){ 
-            this.state.importWays.unshift({label:'当前账户',val:'current-account'})
-        }   
         let storage = window.localStorage     
-        let account = JSON.parse( storage.getItem('account') ) 
-        
-        this.setState({
-            importWays:this.state.importWays,
-            value:'current-account',
-            index:0,
-            account
-        })
+        let account = JSON.parse( storage.getItem('account') )
+        if(account){
+            let importWays = this.state.importWays
+            let alreadyGet = false
+            importWays.forEach(item=>{ if(item.val=='current-account'){ alreadyGet = true } })
+            if(!alreadyGet){ 
+                this.state.importWays.unshift({label:'当前账户',val:'current-account'})
+            }  
+            this.setState({
+                importWays:this.state.importWays,
+                value:'current-account',
+                index:0,
+                account
+            })
+            eth_wallet_js.get_balance(
+                {address:account.address},
+                (r)=>{
+                    this.setState({accountEthBalance:r.ether})
+            })
+        }        
     }
 
     // 处理tab页切换时
@@ -128,13 +137,11 @@ class ImportAccount extends React.Component{
 
     // 私钥导入账户
     privatekeyToAccount(){
-        let comp = this
         let privatekey = this.state.privatekey
         eth_wallet_js.get_address_privatekey(
             'privatekey',privatekey,
             account=>{
                 log(account);
-                log(this)
                 this.storeAccount(account)
                 this.setState({message:'导入账户成功',openSnack:true,messageType:'success'})
                 this.showCurrentAccount()
@@ -269,7 +276,17 @@ class ImportAccount extends React.Component{
                                     item.val =='current-account' &&
                                     <div>
                                         <AccountCircleIcon color="primary" style={{fontSize:'80px'}}></AccountCircleIcon>
-                                        <p className="account-address">{state.account.address}</p>
+                                        <p className="account-address">
+                                            <span className="meta-text" >账户地址：</span>
+                                            <span className="primary-text" >{state.account.address}</span>
+                                        </p>
+                                        <p className="balance">
+                                            <span className="meta-text">以太坊余额：</span>
+                                            <span className="primary-text">{state.accountEthBalance}</span>
+                                            <span className="meta-text">True余额：</span>
+                                            <span className="primary-text">{state.accountTrueBalance}</span>
+                                        </p>
+
                                     </div>
                                 }
                                 {
@@ -404,6 +421,13 @@ class ImportAccount extends React.Component{
                         color:#00acc1;
                         font-size:14px;
                         line-height:20px;
+                    }
+                    .meta-text {
+                        margin: 0px 10px;
+                        color:#324057;
+                    }
+                    .primary-text {
+                        color:#00acc1;
                     }
                 `}</style>
             </div>

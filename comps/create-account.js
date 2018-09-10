@@ -21,7 +21,7 @@ class CreateAccount extends React.Component{
          *  'init':初始页面
          *  'save':保存账户
          */
-        log(this)
+        // log(this)
         this.createEthAccount = this.createEthAccount.bind(this)
         this.downloadKeystore = this.downloadKeystore.bind(this)
     }
