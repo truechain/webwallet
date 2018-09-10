@@ -42,7 +42,7 @@ class SendErc extends React.Component {
                 account, 
             })
         }
-        setTimeout(()=>{
+        this.timer = setTimeout(()=>{
             // 得到true web3智能合约对象
             eth_wallet_js.get_contract(
                 '0xa4d17ab1ee0efdd23edc2869e7ba96b89eecf9ab',
@@ -50,6 +50,10 @@ class SendErc extends React.Component {
                     this.setState({trueContract:r})
             })
         },200)
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timer)
     }
 
     // 当导入了新的账户时更改使用的付款人地址

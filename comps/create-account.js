@@ -3,6 +3,9 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Split from './split-line'
 import Snack from './snackbar'
+// import { translate } from 'react-i18next'
+import Ri18n from '../util/ri18n'
+
 
 const log = console.log
 
@@ -21,7 +24,7 @@ class CreateAccount extends React.Component{
          *  'init':初始页面
          *  'save':保存账户
          */
-        // log(this)
+        log(this)
         this.createEthAccount = this.createEthAccount.bind(this)
         this.downloadKeystore = this.downloadKeystore.bind(this)
     }
@@ -52,6 +55,7 @@ class CreateAccount extends React.Component{
 
     render(){
         const { state, props } = this
+        const { t,setLang } = props
 
         return (
             <div style={{flex:'auto',margin:'20px',maxWidth:'600px'}}>    
@@ -73,8 +77,11 @@ class CreateAccount extends React.Component{
                             color="primary"
                             fullWidth={true}
                             style={{color:'#fff',margin:'25px 0px'}}
-                            onClick={this.createEthAccount}
+                            // onClick={this.createEthAccount}
+                            onClick={ ()=>{ this.props.setLang('en')} }
                         >
+                            {/* {t('gen_account')} */}
+                            { t.gen_account }
                             生成账户
                         </Button>            
                     </div>    
@@ -135,5 +142,5 @@ class CreateAccount extends React.Component{
     }
 }
 
-
-export default CreateAccount
+export default Ri18n(CreateAccount)
+// export default translate('common')(CreateAccount)

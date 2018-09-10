@@ -1,6 +1,8 @@
 import Layout from '../comps/layout'
 import CreateAccount from '../comps/create-account'
 import ImportAccount from '../comps/import-account'
+// import { withI18next } from '../util/withI18next'
+
 
 class Index extends React.Component{
 
@@ -32,4 +34,6 @@ class Index extends React.Component{
     }
 }
 
+
 export default Index
+// export default withI18next(['index','common'])(Index)

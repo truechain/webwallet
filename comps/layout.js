@@ -27,7 +27,8 @@ class Layout extends React.Component {
     }
 
     componentWillUnmount() { // 生命周期钩子 组件卸载前清除定时器
-        clearInterval(this.interval);
+        clearInterval(this.interval)
+        clearTimeout(this.timer)
     }
 
     tick() {        
@@ -40,7 +41,7 @@ class Layout extends React.Component {
         this.setState(
             { nav:val }
         )
-        setTimeout( () => this.props.router.push('/'+val), 260 )
+        this.timer = setTimeout( () => this.props.router.push('/'+val), 260 )
         e.preventDefault()
     }
 

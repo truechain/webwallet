@@ -61,7 +61,7 @@ class ImportAccount extends React.Component{
     }
     componentDidMount() {
         window.addEventListener("resize", this.updateDimensions)
-        setTimeout( ()=>{
+        this.timer = setTimeout( ()=>{
             this.updateDimensions()
             this.updateSwipeHeight()
         }, 200 )
@@ -69,6 +69,7 @@ class ImportAccount extends React.Component{
     }
     componentWillUnmount() {
         window.removeEventListener("resize", this.updateDimensions)
+        clearTimeout(this.timer)
     }
 
     swipeableAction(e){
