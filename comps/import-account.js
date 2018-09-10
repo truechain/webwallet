@@ -80,6 +80,7 @@ class ImportAccount extends React.Component{
     storeAccount(x){
         let storage = window.localStorage
         storage.setItem( 'account', JSON.stringify(x) )
+        if(this.props.notify){ this.props.notify(x.address) }
     }
 
     // 显示当前账户
@@ -244,6 +245,7 @@ class ImportAccount extends React.Component{
                     message={state.message}
                     messageType={state.messageType}
                     status={state.openSnack}
+                    closeSnack={ ()=>{ this.setState({openSnack:false}) }}
                 />
                 <Card raised={true}>
                     <div className="import-account" style={{ maxWidth:importantWidth }}>

@@ -30,6 +30,7 @@ class SendErc extends React.Component {
         this.handleCurrencySelect = this.handleCurrencySelect.bind(this)
         this.chooseAccountFocus = this.chooseAccountFocus.bind(this)
         this.send = this.send.bind(this)
+        this.updateAddress = this.updateAddress.bind(this)
     }
 
     componentDidMount() {
@@ -49,6 +50,11 @@ class SendErc extends React.Component {
                     this.setState({trueContract:r})
             })
         },200)
+    }
+
+    // 当导入了新的账户时更改使用的付款人地址
+    updateAddress(address){
+        this.setState({accountAddress:address})
     }
 
     handleCurrencySelect(e){
@@ -163,7 +169,7 @@ class SendErc extends React.Component {
                         />
                         {
                             state.showAccountSelect &&
-                            <ImportAccount></ImportAccount>
+                            <ImportAccount notify={this.updateAddress}></ImportAccount>
                         }
                         <Button 
                             variant="contained" 

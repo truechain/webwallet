@@ -90,19 +90,13 @@ class Snack extends React.Component{
     }
 
     static getDerivedStateFromProps(props, state){
-        if(state.fromSelf){
-            return {open:state.open,fromSelf:false}
-        }
-        else{
-            return { 
-                open:props.status,fromSelf:false,
-            }
-
+        return { 
+            open:props.status
         }
     }
 
     handleSnackClose(){
-        this.setState({ open:false,fromSelf:true })
+        this.props.closeSnack();
     }
 
 
