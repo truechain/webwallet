@@ -24,11 +24,31 @@ class SendErc extends React.Component {
             ],
             sendTO:'',
             sendNum:'',
-            showAccountSelect:false
+            showAccountSelect:false,
+            accountAddress:''
         }
         this.handleCurrencySelect = this.handleCurrencySelect.bind(this)
-        this.chooseAccountBlur = this.chooseAccountBlur.bind(this)
         this.chooseAccountFocus = this.chooseAccountFocus.bind(this)
+        this.send = this.send.bind(this)
+    }
+
+    componentDidMount() {
+        let storage = window.localStorage     
+        let account = JSON.parse( storage.getItem('account') )
+        if(account){
+            this.setState({ 
+                accountAddress:account.address,
+                account, 
+            })
+        }
+        setTimeout(()=>{
+            // 得到true web3智能合约对象
+            eth_wallet_js.get_contract(
+                '0xa4d17ab1ee0efdd23edc2869e7ba96b89eecf9ab',
+                (r)=>{
+                    this.setState({trueContract:r})
+            })
+        },200)
     }
 
     handleCurrencySelect(e){
@@ -36,18 +56,40 @@ class SendErc extends React.Component {
     }
 
     chooseAccountFocus(e){
-        log('focus',e)
-        this.setState({ 
-            // accountAddress:'0x1234567',
+        this.setState({
             showAccountSelect:true
         })
     }
 
-    chooseAccountBlur(e){
-        log('blur',e)
-        this.setState({
-            // showAccountSelect:false
-        })
+    send(){
+        const { sendTO, sendNum,trueContract } = this.state
+        const { privatekey } = this.state.account
+        if(this.state.currencyType=='ether'){            
+            eth_wallet_js.send_eth(
+                {
+                    to:sendTO,
+                    privatekey,
+                    val:sendNum,
+                    val_type:'ether',
+                },
+                (r)=>{
+                    log(r)
+                }
+            )
+        }
+        if(this.state.currencyType=='true'){
+            eth_wallet_js.send_token(
+                {
+                    to:sendTO,
+                    val:sendNum,
+                    contract:trueContract,
+                    privatekey,
+                },
+                (r)=>{
+                    log(r)
+                }
+            )
+        }
     }
 
     render(){
@@ -97,18 +139,41 @@ class SendErc extends React.Component {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                    <AccountCircle />
+                                        <AccountCircle />
+                                    </InputAdornment>
+                                ),
+                                endAdornment:(
+                                    <InputAdornment position="start">
+                                        {
+                                            state.showAccountSelect &&
+                                            <Button 
+                                                variant="outlined" 
+                                                color="primary"
+                                                style={{marginBottom:'12px'}}
+                                                onClick={()=>{ this.setState({showAccountSelect:false }) }}
+                                            >
+                                                关闭导入账户
+                                            </Button>
+                                        }                                        
                                     </InputAdornment>
                                 ),
                                 readOnly: true,
                             }}
                             onFocus={this.chooseAccountFocus}
-                            onBlur={this.chooseAccountBlur}
                         />
                         {
                             state.showAccountSelect &&
                             <ImportAccount></ImportAccount>
                         }
+                        <Button 
+                            variant="contained" 
+                            color="primary"
+                            fullWidth={true}
+                            style={{color:'#fff',margin:'25px 0px'}}
+                            onClick={this.send}
+                        >
+                            发送交易
+                        </Button>
                     </div>
                 }
                 </Card>

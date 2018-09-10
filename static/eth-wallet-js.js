@@ -284,10 +284,10 @@ var log = console.log;
      * 参数6: gas: gas最大限制数量，默认值11w,推荐使用默认值，不必传参，稳妥，略过量防止失败，交易用不完的gas会自动退回
      */
     ewj.send_token = function(obj,cb){
-        var send_true_num = obj.val;
-        send_true_num = web3.utils.toWei(send_true_num);
-        contract = obj.contract;
-        var encode_abi = contract.methods.transfer(obj.to,send_true_num).encodeABI();
+        var send_num = obj.val;
+        send_num = web3.utils.toWei(send_num);
+        var contract = obj.contract;
+        var encode_abi = contract.methods.transfer(obj.to,send_num).encodeABI();
 
         var gas = 110000;
         if(obj.gas){ gas = parseInt(obj.gas); }
