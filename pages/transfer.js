@@ -20,7 +20,7 @@ class Transfer extends React.Component{
                         justify-content:space-around;
                         align-items:flex-start;
                         max-width:1280px;
-                        margin:10px;
+                        margin:10px 10px 50px;
                     }
                 `}</style>
             </Layout>

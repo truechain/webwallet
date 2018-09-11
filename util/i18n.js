@@ -13,7 +13,7 @@ const I18n = (Wrapped)=>{
     
     I18n.langs = { zh, en }  //当前的语言文件
     I18n.defaultLang = I18n.langs['zh'] //相关语言里找不到对应key值时fallback回该语言
-    I18n.langCode = 'zh'  // 初始默认语言
+    I18n.langCode = I18n.langCode || 'zh'  // 初始默认语言
     I18n.chooseLang = I18n.langs[ I18n.langCode ]  //当前选择的语言
     I18n.lang = { ...I18n.defaultLang, ...I18n.chooseLang }   // 当前的最终语言内容
     I18n.comps = { } 
@@ -44,10 +44,10 @@ const I18n = (Wrapped)=>{
         }
 
         componentWillUnmount() {
+            delete I18n.comps[this.i18nCompKey]
             if(this.comp.componentWillUnmount){
                 this.comp.componentWillUnmount()
-            }            
-            delete I18n.comps[this.i18nCompKey]
+            }
         }
 
 

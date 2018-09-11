@@ -38,6 +38,7 @@ class ImportAccount extends React.Component{
             windowInnerWidth:0,
             accountEthBalance:'0',
             accountTrueBalance:'0',
+            isMounted:false,
         }
         // log(this)
         this.handleChange = this.handleChange.bind(this)
@@ -67,13 +68,13 @@ class ImportAccount extends React.Component{
             this.updateSwipeHeight()
         }, 200 )
         this.showCurrentAccount()
-        // this.inter2 = setInterval(()=>{ log(I18n.lang)},2000)
+        this.setState({isMounted:true})
     }
     componentWillUnmount() {
         window.removeEventListener("resize", this.updateDimensions)
         clearTimeout(this.timer)
-        clearInterval(this.inter2)
-        log('unmount import account')
+        this.setState({isMounted:false})
+        
     }
 
     swipeableAction(e){
@@ -108,7 +109,9 @@ class ImportAccount extends React.Component{
             eth_wallet_js.get_balance(
                 {address:account.address},
                 (r)=>{
-                    this.setState({accountEthBalance:r.ether})
+                    if (this.state.isMounted) { 
+                        this.setState({accountEthBalance:r.ether})
+                    }                    
             })
         }        
     }
@@ -178,6 +181,7 @@ class ImportAccount extends React.Component{
                 log(account) 
                 comp.storeAccount(account)
                 comp.setState({message:'导入账户成功',openSnack:true,messageType:'success'})
+                comp.showCurrentAccount()
             }
         )
     }
@@ -227,6 +231,7 @@ class ImportAccount extends React.Component{
                 if(!res.err){
                     comp.storeAccount(res)
                     comp.setState({message:'导入账户成功',openSnack:true,messageType:'success'})
+                    comp.showCurrentAccount()
                 }
                 else{
                     comp.setState({message:'错误的密码或文件',openSnack:true,messageType:'error'})
@@ -242,7 +247,7 @@ class ImportAccount extends React.Component{
         const { t,setLang } = props
         let importantWidth = 'auto'
         if( state.windowInnerWidth < 660 ){
-            importantWidth = (state.windowInnerWidth-110)+'px'
+            importantWidth = (state.windowInnerWidth-70)+'px'
         }
 
         return (

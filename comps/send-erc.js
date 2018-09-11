@@ -25,7 +25,8 @@ class SendErc extends React.Component {
             sendTO:'',
             sendNum:'',
             showAccountSelect:false,
-            accountAddress:''
+            accountAddress:'',
+            isMounted:false,
         }
         this.handleCurrencySelect = this.handleCurrencySelect.bind(this)
         this.chooseAccountFocus = this.chooseAccountFocus.bind(this)
@@ -47,13 +48,17 @@ class SendErc extends React.Component {
             eth_wallet_js.get_contract(
                 '0xa4d17ab1ee0efdd23edc2869e7ba96b89eecf9ab',
                 (r)=>{
-                    this.setState({trueContract:r})
+                    if(this.state.isMounted){
+                        this.setState({trueContract:r})
+                    }                    
             })
         },200)
+        this.setState({isMounted:true})
     }
 
     componentWillUnmount() {
         clearTimeout(this.timer)
+        this.setState({isMounted:false})
     }
 
     // 当导入了新的账户时更改使用的付款人地址

@@ -20,7 +20,8 @@ class Layout extends React.Component {
             gasPrice:'',
             openSnack:false,
             anchorEl: null,
-            langLabel:'中文', //当前语言
+            langLabel:'', //当前语言
+            langCode: I18n.langCode,
             langs:[
                 {label:'中文',val:'zh'},
                 {label:'English',val:'en'},
@@ -35,6 +36,11 @@ class Layout extends React.Component {
        this.ewj = eth_wallet_js
        this.web3 = this.ewj.web3
        this.interval = setInterval(() => this.tick(), 1500);
+       this.state.langs.forEach(item=>{
+           if(this.state.langCode == item.val){
+               this.setState({langLabel:item.label})
+           }
+       })
     }
 
     componentWillUnmount() { // 生命周期钩子 组件卸载前清除定时器
@@ -52,7 +58,7 @@ class Layout extends React.Component {
         this.setState(
             { nav:val }
         )
-        this.timer = setTimeout( () => this.props.router.push('/'+val), 260 )
+        this.timer = setTimeout( () => this.props.router.push('/'+val), 160 )
         e.preventDefault()
     }
     
@@ -64,11 +70,14 @@ class Layout extends React.Component {
     // 具体语言被选择
     setLang(langCode){
         this.props.setLang(langCode)
-        let langLabel = ''
+        let lang = {}
         this.state.langs.forEach(item=>{
-            if(item.val == langCode){ langLabel = item.label }
+            if(item.val == langCode){ 
+                lang = item
+            }
         })
-        this.setState({ anchorEl: null,langLabel });
+        let { label, val } = lang
+        this.setState({ anchorEl: null,langLabel:label,langCode:val });
     }
 
     
