@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import MenuItem from '@material-ui/core/MenuItem'
 import AccountCircle from '@material-ui/icons/AccountCircle'
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from '@material-ui/core/InputAdornment'
 import ImportAccount from './import-account'
 const log = console.log
 

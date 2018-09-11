@@ -2,7 +2,10 @@ import Head from 'next/head'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import { withRouter } from 'next/router'
-
+import I18n from '../util/i18n'
+import Button from '@material-ui/core/Button'
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const log = console.log
 
@@ -15,9 +18,17 @@ class Layout extends React.Component {
         this.state = {
             nav: props.nav,
             gasPrice:'',
-            openSnack:props.openSnack || false,
+            openSnack:false,
+            anchorEl: null,
+            langLabel:'中文', //当前语言
+            langs:[
+                {label:'中文',val:'zh'},
+                {label:'English',val:'en'},
+            ] 
         }
         this.navChange = this.navChange.bind(this)
+        this.selectLang = this.selectLang.bind(this)
+        this.setLang = this.setLang.bind(this)
     }
 
     componentDidMount() { // 生命周期钩子 组件渲染完成后
@@ -44,6 +55,21 @@ class Layout extends React.Component {
         this.timer = setTimeout( () => this.props.router.push('/'+val), 260 )
         e.preventDefault()
     }
+    
+    // 点击时弹出选择语言
+    selectLang(e){
+        this.setState({ anchorEl: e.currentTarget });
+    }
+
+    // 具体语言被选择
+    setLang(langCode){
+        this.props.setLang(langCode)
+        let langLabel = ''
+        this.state.langs.forEach(item=>{
+            if(item.val == langCode){ langLabel = item.label }
+        })
+        this.setState({ anchorEl: null,langLabel });
+    }
 
     
     
@@ -51,7 +77,7 @@ class Layout extends React.Component {
     render(){
         const { state, props } = this
         const headerRight = [
-            {descr:'当前语言',detail:'中文',key:'language'},
+            {descr:'当前语言',detail:state.langLabel,key:'language'},
             {descr:'当前连接以太坊节点',detail:'infura',key:'node'},
             {descr:'当前网络平均gas价格',detail:state.gasPrice,key:'gasPrice'},
         ]
@@ -62,6 +88,8 @@ class Layout extends React.Component {
             {label:'查看账户',val:'check-account'},
             {label:'帮助中心',val:'helper'},
         ]
+
+        const { langs, anchorEl } = state;
 
         return (
             <div className='layout'>
@@ -82,12 +110,43 @@ class Layout extends React.Component {
                         </div>
                         <div className='header-right'>
                             { 
-                                headerRight.map( item=> (
-                                    <p key={item.descr}>
-                                        <span className='header-right-descr'>{item.descr}</span>
-                                        <span className='header-right-detail'>{item.detail}</span>
-                                    </p>
-                                ) ) 
+                                headerRight.map( item=> {
+                                    if(item.key=='language'){
+                                        return (
+                                            <p key={item.descr}>
+                                                <span className='header-right-descr'>{item.descr}</span>
+                                                <span className='header-right-detail'></span>
+                                                <Button
+                                                    aria-owns={anchorEl ? 'simple-menu' : null}
+                                                    aria-haspopup="true"
+                                                    onClick={this.selectLang}
+                                                    style={{color:'white'}}
+                                                >
+                                                    {state.langLabel}
+                                                </Button>
+                                                <Menu
+                                                    id="simple-menu"
+                                                    anchorEl={anchorEl}
+                                                    open={Boolean(anchorEl)}
+                                                    // onClose={this.close}
+                                                >
+                                                { 
+                                                    langs.map( lang => (
+                                                        <MenuItem key={lang.val} onClick={()=>{this.setLang(lang.val)} }>{lang.label}</MenuItem>
+                                                    ) ) 
+                                                }
+                                                </Menu>
+                                            </p>
+                                        )
+                                    }else{
+                                        return (
+                                            <p key={item.descr}>
+                                            <span className='header-right-descr'>{item.descr}</span>
+                                            <span className='header-right-detail'>{item.detail}</span>
+                                            </p>
+                                        )
+                                    }                                    
+                                })  
                             }
                         </div>
                     </div>
@@ -157,7 +216,7 @@ class Layout extends React.Component {
                     }
                     .header-right-descr {
                         font-size:13px;
-                        margin: 0px 8px;
+                        margin: 0px 5px;
                     }
                     .header-right-detail {
                         font-size:16px;
@@ -170,4 +229,4 @@ class Layout extends React.Component {
 }
     
   
-export default withRouter(Layout) 
+export default withRouter( I18n( Layout ) ) 
