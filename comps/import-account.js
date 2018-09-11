@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField'
 import { UploadField } from '@navjobs/upload'
 import Button from '@material-ui/core/Button'
 import Snack from './snackbar'
+import I18n from '../util/i18n'
 
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
@@ -66,10 +67,13 @@ class ImportAccount extends React.Component{
             this.updateSwipeHeight()
         }, 200 )
         this.showCurrentAccount()
+        // this.inter2 = setInterval(()=>{ log(I18n.lang)},2000)
     }
     componentWillUnmount() {
         window.removeEventListener("resize", this.updateDimensions)
         clearTimeout(this.timer)
+        clearInterval(this.inter2)
+        log('unmount import account')
     }
 
     swipeableAction(e){
@@ -235,6 +239,7 @@ class ImportAccount extends React.Component{
 
     render(){
         const { state, props } = this
+        const { t,setLang } = props
         let importantWidth = 'auto'
         if( state.windowInnerWidth < 660 ){
             importantWidth = (state.windowInnerWidth-110)+'px'
@@ -284,7 +289,7 @@ class ImportAccount extends React.Component{
                                             <span className="primary-text" >{state.account.address}</span>
                                         </p>
                                         <p className="balance">
-                                            <span className="meta-text">以太坊余额：</span>
+                                            <span className="meta-text">{t.eth_balance}：</span>
                                             <span className="primary-text">{state.accountEthBalance}</span>
                                             <span className="meta-text">True余额：</span>
                                             <span className="primary-text">{state.accountTrueBalance}</span>
@@ -438,4 +443,4 @@ class ImportAccount extends React.Component{
     }
 }
 
-export default ImportAccount
+export default I18n(ImportAccount)

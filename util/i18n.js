@@ -1,65 +1,66 @@
-const i18next = require('i18next')
-const XHR = require('i18next-xhr-backend')
-const LanguageDetector = require('i18next-browser-languagedetector')
+import en from '../locales/en.js'
+import zh from '../locales/zh.js'
 
-const options = {
-  fallbackLng: 'en',
-  load: 'languageOnly', // we only provide en, de -> no region specific locals like en-US, de-DE
+const log = console.log
 
-  // have a common namespace used around the full app
-  ns: ['common'],
-  defaultNS: 'common',
+function getRandomInt(min, max){
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    return Math.floor(Math.random() * (max - min)) + min
+}
 
-  debug: process.env.NODE_ENV !== 'production',
-  saveMissing: true,
+const I18n = (Wrapped)=>{
+    
+    I18n.langs = { zh, en }  //当前的语言文件
+    I18n.defaultLang = I18n.langs['zh'] //相关语言里找不到对应key值时fallback回该语言
+    I18n.langCode = 'zh'  // 初始默认语言
+    I18n.chooseLang = I18n.langs[ I18n.langCode ]  //当前选择的语言
+    I18n.lang = { ...I18n.defaultLang, ...I18n.chooseLang }   // 当前的最终语言内容
+    I18n.comps = { } 
 
-  interpolation: {
-    escapeValue: false, // not needed for react!!
-    formatSeparator: ',',
-    format: (value, format, lng) => {
-      if (format === 'uppercase') return value.toUpperCase()
-      return value
+    return class extends React.Component{
+
+        constructor(props) {
+            super(props)
+            this.state = { 
+                lang:I18n.lang  
+            }
+            this.setLang = this.setLang.bind(this)
+            this.i18nCompKey = new Date().getTime().toString()+( getRandomInt(100000,999999).toString() )
+            I18n.comps[this.i18nCompKey] = this
+        }
+
+        setLang(x){
+            I18n.langCode = x
+            I18n.chooseLang = I18n.langs[ I18n.langCode ]
+            I18n.lang = { ...I18n.defaultLang, ...I18n.chooseLang }
+            for(let compKey in I18n.comps){
+                if(!I18n.comps.hasOwnProperty(compKey) ){ continue; }  // 跳过原型链上继承过来的属性
+                
+                if(I18n.comps[compKey].setState){
+                    I18n.comps[compKey].setState({ lang:I18n.lang })
+                }              
+            }
+        }
+
+        componentWillUnmount() {
+            if(this.comp.componentWillUnmount){
+                this.comp.componentWillUnmount()
+            }            
+            delete I18n.comps[this.i18nCompKey]
+        }
+
+
+        render() {
+            const { lang } = this.state
+            const props = {
+              ...this.props,
+              t:lang,
+              setLang:this.setLang,
+            }
+            return <Wrapped {...props} ref={comp=>{this.comp=comp}} />
+        }
     }
-  }
 }
 
-const i18nInstance = i18next
-
-// for browser use xhr backend to load translations and browser lng detector
-if (process.browser) {
-  i18nInstance
-    .use(XHR)
-    // .use(Cache)
-    .use(LanguageDetector)
-}
-
-// initialize if not already initialized
-if (!i18nInstance.isInitialized) i18nInstance.init(options)
-
-// a simple helper to getInitialProps passed on loaded i18n data
-const getInitialProps = (req, namespaces) => {
-  if (!namespaces) namespaces = i18nInstance.options.defaultNS
-  if (typeof namespaces === 'string') namespaces = [namespaces]
-
-  req.i18n.toJSON = () => null // do not serialize i18next instance and send to client
-
-  const initialI18nStore = {}
-  req.i18n.languages.forEach((l) => {
-    initialI18nStore[l] = {}
-    namespaces.forEach((ns) => {
-      initialI18nStore[l][ns] = (req.i18n.services.resourceStore.data[l] || {})[ns] || {}
-    })
-  })
-
-  return {
-    i18n: req.i18n, // use the instance on req - fixed language on request (avoid issues in race conditions with lngs of different users)
-    initialI18nStore,
-    initialLanguage: req.i18n.language
-  }
-}
-
-module.exports = {
-  getInitialProps,
-  i18nInstance,
-  I18n: i18next.default
-}
+export default I18n
