@@ -55,6 +55,7 @@ class ImportAccount extends React.Component{
         this.updateDimensions = this.updateDimensions.bind(this)
         this.swipeableAction = this.swipeableAction.bind(this)
         this.showCurrentAccount = this.showCurrentAccount.bind(this)
+        this.logOut = this.logOut.bind(this)
     }
 
     // 更新窗口宽度状态
@@ -62,13 +63,24 @@ class ImportAccount extends React.Component{
         this.setState({ windowInnerWidth: window.innerWidth })
     }
     componentDidMount() {
+        this.setState({isMounted:true})
         window.addEventListener("resize", this.updateDimensions)
         this.timer = setTimeout( ()=>{
             this.updateDimensions()
             this.updateSwipeHeight()
+            // 得到true web3智能合约对象
+            eth_wallet_js.get_contract(
+                '0xa4d17ab1ee0efdd23edc2869e7ba96b89eecf9ab',
+                (r)=>{
+                    if(this.state.isMounted){
+                        this.setState(
+                            {trueContract:r},
+                            ()=>{ this.showCurrentAccount() }
+                        )
+                    }                    
+            })
         }, 200 )
-        this.showCurrentAccount()
-        this.setState({isMounted:true})
+        this.showCurrentAccount()        
     }
     componentWillUnmount() {
         window.removeEventListener("resize", this.updateDimensions)
@@ -100,20 +112,49 @@ class ImportAccount extends React.Component{
             if(!alreadyGet){ 
                 this.state.importWays.unshift({label:'当前账户',val:'current-account'})
             }  
-            this.setState({
+            let accountState = {
                 importWays:this.state.importWays,
                 value:'current-account',
                 index:0,
-                account
-            })
+                account,
+            }
+            if(account.ether){ accountState.accountEthBalance = account.ether }
+            if(account.trueToken){ accountState.accountTrueBalance = account.trueToken }
+            this.setState(accountState)
+            
+            let query = {address:account.address}
+            if(this.state.trueContract){ query.contract = this.state.trueContract }
             eth_wallet_js.get_balance(
-                {address:account.address},
+                query,
                 (r)=>{
-                    if (this.state.isMounted) { 
-                        this.setState({accountEthBalance:r.ether})
+                    if (this.state.isMounted) {
+                        const { ether,token } = r  
+                        let accountState = {accountEthBalance:ether}
+                        if(token){ accountState.accountTrueBalance = token }                      
+                        this.setState(accountState)
+                        account.ether = ether
+                        account.trueToken = token
+                        storage.setItem( 'account', JSON.stringify(account) )
                     }                    
             })
         }        
+    }
+
+    // 退出当前账户
+    logOut(){
+        let importWays = this.state.importWays.filter(item=>{
+            if(item.val=='current-account'){ return false }
+            else{ return true }
+        })
+        let accountState = {
+            importWays:importWays,
+            value:'privatekey',
+            index:0,
+        }
+        this.setState(accountState)
+        let storage = window.localStorage  
+        storage.removeItem('account')
+        if(this.props.notify){ this.props.notify('') }
     }
 
     // 处理tab页切换时
@@ -122,8 +163,7 @@ class ImportAccount extends React.Component{
             if(item.val == value){
                 this.setState({ index,value })
             }
-        } )
-        
+        } )        
     }
     // 处理swiper tab页的滑动时
     handleChangeIndex = index => {
@@ -150,7 +190,6 @@ class ImportAccount extends React.Component{
         eth_wallet_js.get_address_privatekey(
             'privatekey',privatekey,
             account=>{
-                log(account);
                 this.storeAccount(account)
                 this.setState({message:'导入账户成功',openSnack:true,messageType:'success'})
                 this.showCurrentAccount()
@@ -299,7 +338,15 @@ class ImportAccount extends React.Component{
                                             <span className="meta-text">True余额：</span>
                                             <span className="primary-text">{state.accountTrueBalance}</span>
                                         </p>
-
+                                        <Button 
+                                            variant="contained" 
+                                            color="primary"
+                                            fullWidth={true}
+                                            style={{color:'#fff',margin:'25px 0px'}}
+                                            onClick={this.logOut}
+                                        >
+                                            退出当前账户
+                                        </Button>
                                     </div>
                                 }
                                 {

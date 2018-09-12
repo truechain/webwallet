@@ -194,7 +194,13 @@ var log = console.log;
                 ether:etherstr
             };
             if(obj.contract){
-                cb(r);
+                obj.contract.methods.balanceOf(obj.address).call({},function(err,result){
+                    if(err) { log(err);  }
+                    if(!err){ 
+                        r.token = web3.utils.fromWei(result)
+                        cb(r); 
+                    }
+                })                
             }else{
                 cb(r);
             }
