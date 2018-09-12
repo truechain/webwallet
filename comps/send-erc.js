@@ -33,6 +33,7 @@ class SendErc extends React.Component {
             snackOpen:false,
             snackMessage:'',
             snackMessageType:'',
+            txhash:''
         }
         this.handleCurrencySelect = this.handleCurrencySelect.bind(this)
         this.chooseAccountFocus = this.chooseAccountFocus.bind(this)

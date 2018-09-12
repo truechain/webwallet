@@ -11,32 +11,62 @@ class Account extends React.Component{
             accountAddress:'',
             accountEthBalance:0,
             accountTrueBalance:0,
-            showAccount:false
+            showAccount:false,
+            isMounted:false,
         }
         this.handleAddressInput = this.handleAddressInput.bind(this)
     }
 
+    componentDidMount() {
+        this.setState({isMounted:true})
+        this.timer = setTimeout( ()=>{
+            // 得到true web3智能合约对象
+            eth_wallet_js.get_contract(
+                '0xa4d17ab1ee0efdd23edc2869e7ba96b89eecf9ab',
+                (r)=>{
+                    if(this.state.isMounted){
+                        this.setState({trueContract:r})
+                    }                    
+            })
+        }, 200 )
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timer)
+        this.setState({isMounted:false})
+    }
+
     handleAddressInput(e){
         let val =  e.target.value
+        let query = {}
+        let accountState = {}       
         if( (val.length ==40) && ( val.indexOf("0x") < 0 ) ){            
             val = "0x"+val
+            query.address = val
+            if(this.state.trueContract){ query.contract = this.state.trueContract }
             eth_wallet_js.get_balance(
-                {address:val},
-                r=>{
-                    this.setState({ 
+                query,
+                r=>{ log(r)
+                    accountState = { 
                         showAccount:true, accountAddress:val,
-                        accountEthBalance:r.ether 
-                    })
+                        accountEthBalance:r.ether  
+                    }
+                    if(r.token){ accountState.accountTrueBalance = r.token }                      
+                    this.setState(accountState)
             })            
         }
         if( (val.length == 42) && ( val.indexOf("0x") == 0 ) ){
+            query.address = val
+            if(this.state.trueContract){ query.contract = this.state.trueContract }
             eth_wallet_js.get_balance(
-                {address:val},
-                r=>{
-                    this.setState({ 
+                query,
+                r=>{ log(r)
+                    accountState = { 
                         showAccount:true, accountAddress:val,
-                        accountEthBalance:r.ether 
-                    })
+                        accountEthBalance:r.ether  
+                    }
+                    if(r.token){ accountState.accountTrueBalance = r.token }                      
+                    this.setState(accountState)
             })
         }
     }

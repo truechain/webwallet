@@ -67,17 +67,16 @@ class TransactionStatus extends React.Component {
                             let toAndVal = this.parseSendInfo(result.input)
                             to = toAndVal.to
                             sendNumText = toAndVal.val
-                            this.setState( { to, sendNumText } )
+                            this.setState( { to, sendNumText,from:result.from, showTransaction:true } )
                         })
                     }
                     else{ //log('in ether')
                         sendNumText=  web3.utils.fromWei( result.value, 'ether')+' ether'  
-                        this.setState({ sendNumText })                       
-                    }    
-                               
+                        this.setState({ sendNumText, to:result.to,from:result.from,showTransaction:true })                       
+                    }         
                 })                
 
-                txStatus = { ...txStatus, from, to }
+                txStatus = { ...txStatus, from }
                 if(rece.status){ 
                     txStatus.sendStatusText= '成功' 
                     web3.eth.getBlockNumber()
@@ -105,6 +104,7 @@ class TransactionStatus extends React.Component {
         })
     }
 
+    //校验交易哈希是否有效
     // 处理输入交易哈希
     handleTxhashInput(e){
         let val =  e.target.value
@@ -147,6 +147,7 @@ class TransactionStatus extends React.Component {
                                     type="text"
                                     onChange={this.handleTxhashInput}
                                     style={{margin:'35px 0px'}}
+                                    value={state.txhash}
                                 />
                             ):
                             (
