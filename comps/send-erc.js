@@ -5,6 +5,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import ImportAccount from './import-account'
+import TransactionStatus from './transaction-status'
+import Snack from './snackbar'
 const log = console.log
 
 
@@ -27,6 +29,10 @@ class SendErc extends React.Component {
             showAccountSelect:false,
             accountAddress:'',
             isMounted:false,
+            txhash:'',
+            snackOpen:false,
+            snackMessage:'',
+            snackMessageType:'',
         }
         this.handleCurrencySelect = this.handleCurrencySelect.bind(this)
         this.chooseAccountFocus = this.chooseAccountFocus.bind(this)
@@ -64,6 +70,14 @@ class SendErc extends React.Component {
     // 当导入了新的账户时更改使用的付款人地址
     updateAddress(address){
         this.setState({accountAddress:address})
+        let storage = window.localStorage     
+        let account = JSON.parse( storage.getItem('account') )
+        if(account){
+            this.setState({ 
+                accountAddress:account.address,
+                account, 
+            })
+        }
     }
 
     handleCurrencySelect(e){
@@ -76,6 +90,7 @@ class SendErc extends React.Component {
         })
     }
 
+    // 发送代币或者以太坊
     send(){
         const { sendTO, sendNum,trueContract } = this.state
         const { privatekey } = this.state.account
@@ -89,6 +104,16 @@ class SendErc extends React.Component {
                 },
                 (r)=>{
                     log(r)
+                    if(r.err){
+                        this.setState({snackOpen:true,snackMessage:'发送交易失败！',snackMessageType:'error'})
+                    }else{
+                        if(this.state.isMounted){
+                            this.setState({ 
+                                txhash:r.txhash,
+                                snackOpen:true,snackMessage:'发送交易成功！',snackMessageType:'success'
+                            })
+                        }                        
+                    }
                 }
             )
         }
@@ -102,6 +127,16 @@ class SendErc extends React.Component {
                 },
                 (r)=>{
                     log(r)
+                    if(r.err){
+                        this.setState({snackOpen:true,snackMessage:'发送交易失败！',snackMessageType:'error'})
+                    }else{
+                        if(this.state.isMounted){
+                            this.setState({ 
+                                txhash:r.txhash,
+                                snackOpen:true,snackMessage:'发送交易成功！',snackMessageType:'success'
+                            })
+                        }                        
+                    }
                 }
             )
         }
@@ -112,7 +147,13 @@ class SendErc extends React.Component {
         
         return (
             <div className='send-erc'>
-                <Card raised={true}>
+                <Snack
+                    message={state.snackMessage}
+                    messageType={state.snackMessageType}
+                    status={state.snackOpen}
+                    closeSnack={ ()=>{ this.setState({snackOpen:false}) }}
+                />
+                <Card raised={true} style={ { marginBottom:'20px' } } >
                 { 
                     state.step =='send' &&
                     <div className='send-card'>
@@ -192,6 +233,11 @@ class SendErc extends React.Component {
                     </div>
                 }
                 </Card>
+                { 
+                    state.txhash.length > 0 &&
+                    <TransactionStatus txhash={state.txhash}></TransactionStatus>
+                }
+                
                 <style jsx>{`
                     .send-erc {
                         display: flex;                
