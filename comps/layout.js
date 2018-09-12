@@ -85,17 +85,18 @@ class Layout extends React.Component {
     
     render(){
         const { state, props } = this
+        let { t,setLang } = props
         const headerRight = [
-            {descr:'当前语言',detail:state.langLabel,key:'language'},
-            {descr:'当前连接以太坊节点',detail:'infura',key:'node'},
-            {descr:'当前网络平均gas价格',detail:state.gasPrice,key:'gasPrice'},
+            { descr:t.layout_current_language, detail:state.langLabel, key:'language' },
+            { descr:t.layout_current_node, detail:'infura', key:'node' },
+            { descr:t.layout_current_average_gas_price, detail:state.gasPrice, key:'gasPrice' },
         ]
         const navs = [
-            {label:'创建/导入钱包',val:'index'},
-            {label:'发送以太坊/代币',val:'transfer'},
-            {label:'检查交易状态',val:'check-tx'},
-            {label:'查看账户',val:'check-account'},
-            {label:'帮助中心',val:'helper'},
+            { label:t.layout_nav_index, val:'index' },
+            { label:t.layout_nav_send_erc, val:'transfer' },
+            { label:t.layout_nav_check_tx, val:'check-tx' },
+            { label:'查看账户', val:'check-account' },
+            { label:'帮助中心', val:'helper' },
         ]
 
         const { langs, anchorEl } = state;
@@ -114,7 +115,10 @@ class Layout extends React.Component {
                 <div className='header-wrapper'>
                     <div className='header'>
                         <div className='header-left'>
-                            <div className='header-left-title'>在线钱包</div>
+                            <div className='header-left-title'>
+                                {/* 在线钱包 */}
+                                {t.layout_app_name}
+                            </div>
                             <div className='header-left-version'>v1.0.1</div>
                         </div>
                         <div className='header-right'>
