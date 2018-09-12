@@ -253,19 +253,19 @@ var log = console.log;
         .then(function(res){
             web3.eth.sendSignedTransaction(res.rawTransaction)
             .on('transactionHash', function(txhash){
-                log('transactionHash',txhash)
+                // log('transactionHash',txhash)
                 cb({ txhash:txhash });
             })
             .on('error',function(err,rece){ if(!rece){ var rece={}; }
                 log('err',err)
                 cb({ err:err, rece:rece, txhash:rece.transactionHash });
             })
-            .on('receipt',function(rece){
-                log('receipt',rece)
-            })
-            .on('confirmation', function(confNumber, rece){
-                log('confirmation',confNumber,rece)
-            })
+            // .on('receipt',function(rece){
+            //     log('receipt',rece)
+            // })
+            // .on('confirmation', function(confNumber, rece){
+            //     log('confirmation',confNumber,rece)
+            // })
         })
     }
 

@@ -58,7 +58,7 @@ class TransactionStatus extends React.Component {
                  // 得到eth发送数量
                  let sendNumText = ''
                  web3.eth.getTransaction(txhash)
-                 .then(result=>{  // log('result',result)                
+                 .then(result=>{                
 
                     //解析发送的代币 的目标地址和发送数量
                     if( result.input.length > 100 ){ //log('in token')
@@ -82,7 +82,7 @@ class TransactionStatus extends React.Component {
                     web3.eth.getBlockNumber()
                     .then(blockNum=>{
                         let confrimNum = blockNum - txStatus.txBlockNum
-                        if(confrimNum>0){ log(confrimNum)
+                        if(confrimNum>0){ log('confrimNum',confrimNum)
                             txStatus.showTransaction = true
                             if(confrimNum>12){
                                 txStatus.sendDescr ='已得到12次以上确认'                            
@@ -121,7 +121,6 @@ class TransactionStatus extends React.Component {
 
     // 解析发送代币数据
     parseSendInfo(x){
-        log(x)
         let ewj = eth_wallet_js
         let web3 = ewj.web3
         let to = "0x" + x.substring(34,74)
