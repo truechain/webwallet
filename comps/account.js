@@ -86,8 +86,10 @@ class Account extends React.Component{
                             !state.showAccount ?
                             (
                                 <TextField
-                                    label={'输入账户地址'} 
-                                    placeholder={'地址通常为0x开头的42位16进制字符串'} 
+                                    label={t.public_account_address_words}
+                                    // {'输入账户地址'} 
+                                    placeholder={t.public_account_address_tip_words}
+                                    // {'地址通常为0x开头的42位16进制字符串'} 
                                     fullWidth={true}
                                     type="text"
                                     onChange={this.handleAddressInput}
@@ -96,16 +98,25 @@ class Account extends React.Component{
                             ):
                             (
                                 <div>
-                                    <p>账户信息</p>
+                                    <p>
+                                        {/* 账户信息 */}
+                                        {t.public_account_info_words}
+                                    </p>
                                     <AccountCircleIcon color="primary" style={{fontSize:'80px'}}></AccountCircleIcon>
                                     <p className="account-address">
-                                        <span className="meta-text" >账户地址：</span>
+                                        <span className="meta-text" >
+                                            {/* 账户地址： */}
+                                            {t.public_account_address_words}:
+                                        </span>
                                         <span className="primary-text" >{state.accountAddress}</span>
                                     </p>
                                     <p className="balance">
                                         <span className="meta-text">{t.eth_balance}：</span>
                                         <span className="primary-text">{state.accountEthBalance}</span>
-                                        <span className="meta-text">True余额：</span>
+                                        <span className="meta-text">
+                                            {/* True余额： */}
+                                            {t.true_balance}:
+                                        </span>
                                         <span className="primary-text">{state.accountTrueBalance}</span>
                                     </p>
                                 </div>

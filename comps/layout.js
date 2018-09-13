@@ -95,11 +95,11 @@ class Layout extends React.Component {
             { descr:t.layout_current_average_gas_price, detail:state.gasPrice, key:'gasPrice' },
         ]
         const navs = [
-            { label:t.layout_nav_index, val:'index' },
-            { label:t.layout_nav_send_erc, val:'transfer' },
-            { label:t.layout_nav_check_tx, val:'check-tx' },
-            { label:'查看账户', val:'check-account' },
-            { label:'帮助中心', val:'helper' },
+            { label:t.layout_nav_index, val:'index' },  //label:创建/导入钱包
+            { label:t.layout_nav_send_erc, val:'transfer' }, //label:发送以太坊/代币
+            { label:t.layout_nav_check_tx, val:'check-tx' },//label:检查交易状态
+            { label:t.layout_nav_check_account, val:'check-account' },//label:查看账户
+            // { label:t.layout_nav_helper, val:'helper' },//label:帮助中心
         ]
 
         const { langs, anchorEl } = state;

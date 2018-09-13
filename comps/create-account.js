@@ -34,6 +34,7 @@ class CreateAccount extends React.Component{
     }
 
     createEthAccount(){
+        const { t } = this.props
         eth_wallet_js.gen_wallet(this.state.accountPwd,res=>{
 
             let { privatekey,address,mnemonic,keystore } = res
@@ -44,7 +45,7 @@ class CreateAccount extends React.Component{
                 accountMnemonic:mnemonic,
                 accountKeystore:keystore,
                 openSnack:true,
-                message:'创建账户成功！',
+                message:t.create_account_success_message, //'创建账户成功！',
                 messageType:'success'
             })
             let storage = window.localStorage
@@ -60,6 +61,7 @@ class CreateAccount extends React.Component{
     render(){
         const { state, props } = this
         const { t,setLang } = props
+        let orWords = t.public_or_words // 或者
 
         return (
             <div style={{flex:'auto',margin:'20px',maxWidth:'600px'}}>    
@@ -67,10 +69,15 @@ class CreateAccount extends React.Component{
                 {
                     state.step == 'init' &&
                     <div className="create-account">
-                        <p className="create-account-title">新建账户</p>                        
+                        <p className="create-account-title">
+                            {/* 新建账户 */}
+                            {t.create_account_title}
+                        </p>                        
                         <TextField 
-                            label={'设置密码（可选）'} 
-                            placeholder={'建议设置9位或以上的强密码'} 
+                            // {'设置密码（可选）'} 
+                            label={t.create_account_input_set_pwd_tip}                            
+                            placeholder={t.create_account_input_set_pwd_suggest}
+                            // {'建议设置9位或以上的强密码'} 
                             fullWidth={true} 
                             id="pwd" 
                             type="password"
@@ -92,15 +99,27 @@ class CreateAccount extends React.Component{
                 {
                     state.step == 'save' &&
                     <div className="save-account">
-                        <p className="save-account-title">保存账户</p>
-                        <p className="title">保存好你的私钥</p>
+                        <p className="save-account-title">
+                            {/* 保存账户 */}
+                            {t.create_account_save_title}
+                        </p>
+                        <p className="title">
+                            {/* 保存好你的私钥 */}
+                            {t.create_account_save_privatekey}
+                        </p>
                         <p className="bk-text">{state.accountPrivatekey}</p>
-                        <p className="title">你的地址</p>
+                        <p className="title">
+                            {/* 你的地址 */}
+                            {t.create_account_show_your_address}
+                        </p>
                         <p className="bk-text">{state.accountAddress}</p>
-                        <Split width="120px" color="#8492A6" text="或者" />
-                        <p className="title">抄写下你的助记词</p>
+                        <Split width="120px" color="#8492A6" text={orWords} />
+                        <p className="title">
+                            {/* 抄写下你的助记词 */}
+                            {t.create_account_copy_your_mnemonic}
+                        </p>
                         <p className="bk-text">{state.accountMnemonic}</p>
-                        <Split width="120px" color="#8492A6" text="或者" />
+                        <Split width="120px" color="#8492A6" text={orWords} />
                         <Button 
                             variant="contained" 
                             color="primary"
@@ -108,7 +127,8 @@ class CreateAccount extends React.Component{
                             style={{color:'#fff',margin:'25px 0px'}}
                             onClick={this.downloadKeystore}
                         >
-                            下载你的keystore文件
+                            {/* 下载你的keystore文件 */}
+                            { t.create_account_download_your_keystore }
                         </Button>
                     </div>
                 }                                  

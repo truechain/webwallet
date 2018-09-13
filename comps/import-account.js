@@ -17,13 +17,14 @@ class ImportAccount extends React.Component{
 
     constructor(props) {
         super(props)
+        let { t } = props
         this.state = { 
             value:'privatekey',
             index:0,
             importWays:[
-                {label:'私钥',val:'privatekey'},
-                {label:'助记词',val:'mnemonic'},
-                {label:'keystore',val:'keystore'},
+                {label:t.import_account_account_tab_label_privatekey,val:'privatekey'}, //label:私钥
+                {label:t.import_account_account_tab_label_mnemonic,val:'mnemonic'},// label:助记词
+                {label:t.import_account_account_tab_label_keystore,val:'keystore'},//label:keystore
             ],
             privatekey:'',
             showPrivatekeyBtn:false,
@@ -58,11 +59,34 @@ class ImportAccount extends React.Component{
         this.logOut = this.logOut.bind(this)
     }
 
+    static getDerivedStateFromProps(props, state){        
+        const { t } = props
+        let importWays = state.importWays
+        importWays.forEach(item=>{
+            if(item.val=='privatekey'){ 
+                item.label=t.import_account_account_tab_label_privatekey //label:私钥
+            }
+            if(item.val=='mnemonic'){
+                item.label=t.import_account_account_tab_label_mnemonic // label:助记词
+            }
+            if(item.val=='keystore'){
+                item.label=t.import_account_account_tab_label_keystore//label:keystore
+            }
+            if(item.val=='current-account'){
+                item.label=t.import_account_account_tab_label_current_account //label:当前账户
+            }
+        })
+        return {
+            importWays
+        }
+    }
+
     // 更新窗口宽度状态
     updateDimensions() {
         this.setState({ windowInnerWidth: window.innerWidth })
     }
     componentDidMount() {
+        let {t} = this.props
         this.setState({isMounted:true})
         window.addEventListener("resize", this.updateDimensions)
         this.timer = setTimeout( ()=>{
@@ -80,7 +104,7 @@ class ImportAccount extends React.Component{
                     }                    
             })
         }, 200 )
-        this.showCurrentAccount()        
+        this.showCurrentAccount()     
     }
     componentWillUnmount() {
         window.removeEventListener("resize", this.updateDimensions)
@@ -106,6 +130,7 @@ class ImportAccount extends React.Component{
 
     // 显示当前账户
     showCurrentAccount(){
+        const { t } = this.props
         let storage = window.localStorage     
         let account = JSON.parse( storage.getItem('account') )
         if(account){
@@ -113,7 +138,7 @@ class ImportAccount extends React.Component{
             let alreadyGet = false
             importWays.forEach(item=>{ if(item.val=='current-account'){ alreadyGet = true } })
             if(!alreadyGet){ 
-                this.state.importWays.unshift({label:'当前账户',val:'current-account'})
+                this.state.importWays.unshift({label:t.import_account_account_tab_label_current_account,val:'current-account'})
             }  
             let accountState = {
                 importWays:this.state.importWays,
@@ -287,6 +312,7 @@ class ImportAccount extends React.Component{
     render(){
         const { state, props } = this
         const { t,setLang } = props
+        let importWords = t.public_import_account_words
         let importantWidth = 'auto'
         if( state.windowInnerWidth < 660 ){
             importantWidth = (state.windowInnerWidth-70)+'px'
@@ -302,8 +328,14 @@ class ImportAccount extends React.Component{
                 />
                 <Card raised={true}>
                     <div className="import-account" style={{ maxWidth:importantWidth }}>
-                        <p className="import-account-title">导入账户</p>
-                        <p className="title">你将怎样使用账户?</p>
+                        <p className="import-account-title">
+                            {/* 导入账户 */}
+                            {t.import_account_title}
+                        </p>
+                        <p className="title">
+                            {/* 你将怎样使用账户? */}
+                            {t.import_account_how_use_title}
+                        </p>
                         <AppBar position="static" color="default">
                             <Tabs
                                 value={state.value}
@@ -312,7 +344,7 @@ class ImportAccount extends React.Component{
                                 textColor="primary"
                                 fullWidth
                             >
-                            {
+                            {   
                                 state.importWays.map( item=>(
                                     <Tab key={item.val} value={item.val} label={item.label} />
                                 ) )
@@ -332,13 +364,19 @@ class ImportAccount extends React.Component{
                                     <div>
                                         <AccountCircleIcon color="primary" style={{fontSize:'80px'}}></AccountCircleIcon>
                                         <p className="account-address">
-                                            <span className="meta-text" >账户地址：</span>
+                                            <span className="meta-text" >
+                                                {/* 账户地址： */}
+                                                {t.import_account_account_addres_label}:
+                                            </span>
                                             <span className="primary-text" >{state.account.address}</span>
                                         </p>
                                         <p className="balance">
                                             <span className="meta-text">{t.eth_balance}：</span>
                                             <span className="primary-text">{state.accountEthBalance}</span>
-                                            <span className="meta-text">True余额：</span>
+                                            <span className="meta-text">
+                                                {/* True余额： */}
+                                                {t.import_account_account_True_balance_label}
+                                            </span>
                                             <span className="primary-text">{state.accountTrueBalance}</span>
                                         </p>
                                         <Button 
@@ -348,7 +386,8 @@ class ImportAccount extends React.Component{
                                             style={{color:'#fff',margin:'25px 0px'}}
                                             onClick={this.logOut}
                                         >
-                                            退出当前账户
+                                            {/* 退出当前账户 */}
+                                            {t.import_account_account_exit_current_account}
                                         </Button>
                                     </div>
                                 }
@@ -356,7 +395,8 @@ class ImportAccount extends React.Component{
                                     item.val == 'privatekey' &&
                                     <div style={{width:'100%'}}>
                                     <TextField 
-                                        placeholder={'私钥内容'} 
+                                        placeholder={t.public_privatekey_words} 
+                                        // 私钥内容
                                         fullWidth={true}
                                         type="text"
                                         onChange={this.handlePrivatekeyInput}
@@ -371,7 +411,8 @@ class ImportAccount extends React.Component{
                                             style={{color:'#fff',margin:'25px 0px'}}
                                             onClick={this.privatekeyToAccount}
                                         >
-                                            导入账户
+                                            {/* 导入账户 */}
+                                            {importWords}
                                         </Button>
                                     }                                    
                                     </div>
@@ -380,7 +421,8 @@ class ImportAccount extends React.Component{
                                     item.val == 'mnemonic' &&
                                     <div style={{width:'100%'}}>
                                     <TextField 
-                                        placeholder={'助记词(12个字符)'} 
+                                        placeholder={t.public_mnemonic_words}
+                                        // {'助记词(12个字符)'} 
                                         fullWidth={true}
                                         type="text"
                                         onChange={this.handleMnemonicInput }
@@ -395,7 +437,8 @@ class ImportAccount extends React.Component{
                                             style={{color:'#fff',margin:'25px 0px'}}
                                             onClick={this.mnemonicToAccount}
                                         >
-                                            导入账户
+                                            {/* 导入账户 */}
+                                            {importWords}
                                         </Button>
                                     }
                                     </div>
@@ -415,12 +458,19 @@ class ImportAccount extends React.Component{
                                                 state.keystoreFileName &&
                                                 <p>{state.keystoreFileName}</p>
                                             }
-                                            <p>点击选择keystore文件</p>
-                                            <p>或者拖拽keystore文件到这里</p>
+                                            <p>
+                                                {/* 点击选择keystore文件 */}
+                                                {t.import_account_account_select_keystore_tip1}
+                                            </p>
+                                            <p>
+                                                {/* 或者拖拽keystore文件到这里 */}
+                                                {t.import_account_account_select_keystore_tip2}
+                                            </p>
                                         </div>
                                     </UploadField>
                                     <TextField 
-                                        placeholder={'之前设置的密码（未设置过则不用填）'} 
+                                        placeholder={t.public_optional_pwd}
+                                        // {'之前设置的密码（未设置过则不用填）'} 
                                         fullWidth={true}
                                         type="password"
                                         onChange={this.handleKeystorePwdInput }
@@ -435,7 +485,8 @@ class ImportAccount extends React.Component{
                                             style={{color:'#fff',margin:'25px 0px'}}
                                             onClick={this.keystoreToAccount}
                                         >
-                                            导入账户
+                                            {/* 导入账户 */}
+                                            {importWords}
                                         </Button>
                                     }
                                     </div> 

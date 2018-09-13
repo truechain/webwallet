@@ -131,6 +131,7 @@ class TransactionStatus extends React.Component {
 
     render(){
         const { state,props } = this
+        const { t, setLang } = props
 
         return (
             <div className="trans-status">
@@ -140,35 +141,52 @@ class TransactionStatus extends React.Component {
                             !state.showTransaction ?
                             (
                                 <TextField
-                                    label={'交易哈希'} 
-                                    placeholder={'交易哈希通常为0x开头的66位16进制字符串'} 
+                                    label={t.public_transaction_hash}
+                                    // {'交易哈希'} 
+                                    placeholder={t.public_txhash_tip}
+                                    // {'交易哈希通常为0x开头的66位16进制字符串'} 
                                     fullWidth={true}
                                     type="text"
                                     onChange={this.handleTxhashInput}
                                     style={{margin:'35px 0px'}}
-                                    value={state.txhash}
+                                    // value={state.txhash}
                                 />
                             ):
                             (
                                 <div>
                                     <div className="trans-name">
-                                        <p className="trans">交易哈希</p>
+                                        <p className="trans">
+                                            {/* 交易哈希 */}
+                                            {t.public_transaction_hash}
+                                        </p>
                                         <p className="trans-txhash">{this.state.txhash}</p>
                                     </div>
                                     <div className="trans-from">
-                                        <span className="meta-text">从</span>
+                                        <span className="meta-text">
+                                            {/* 从 */}
+                                            {t.public_from_words}
+                                        </span>
                                         <span className="primary-text">{state.from}</span>
                                     </div>
                                     <div className="trans-descr">
-                                        <span className="meta-text">发送</span>
+                                        <span className="meta-text">
+                                            {/* 发送 */}
+                                            {t.public_send_words}
+                                        </span>
                                         <span className="primary-text">{state.sendNumText}</span>
                                     </div>
                                     <div className="trans-to">
-                                        <span className="meta-text">至</span>
+                                        <span className="meta-text">
+                                            {/* 至 */}
+                                            {t.public_to_words}
+                                        </span>
                                         <span className="primary-text">{state.to}</span>
                                     </div>
                                     <p className="trans-sts-text">
-                                        <span className="meta-text">交易状态：</span>
+                                        <span className="meta-text">
+                                            {/* 交易状态： */}
+                                            {t.public_transaction_status}
+                                        </span>
                                         <span className="primary-text">{state.sendStatusText}</span>
                                     </p>
                                     <p className="trans-confirm">

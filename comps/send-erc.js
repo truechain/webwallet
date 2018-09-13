@@ -7,6 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import ImportAccount from './import-account'
 import TransactionStatus from './transaction-status'
 import Snack from './snackbar'
+import I18n from '../util/i18n'
 const log = console.log
 
 
@@ -148,6 +149,14 @@ class SendErc extends React.Component {
 
     render(){
         const { state, props } = this
+        const { t, setLang } = props
+
+        let { currencies } = state
+        currencies.forEach(item=>{
+            if(item.value=='option'){
+                item.label = t.send_erc_select_currencies
+            }
+        })
         
         return (
             <div className='send-erc'>
@@ -162,8 +171,10 @@ class SendErc extends React.Component {
                     state.step =='send' &&
                     <div className='send-card'>
                         <TextField 
-                            label={'发送至地址'} 
-                            placeholder={'地址通常为0x开头的42位16进制字符串'} 
+                            label={t.send_erc_send_input_label}
+                            // {'发送至地址'} 
+                            placeholder={t.public_account_address_tip_words}
+                            // {'地址通常为0x开头的42位16进制字符串'} 
                             fullWidth={true}
                             type="text"
                             onChange={ e => state.sendTO = e.target.value }
@@ -171,7 +182,8 @@ class SendErc extends React.Component {
                         />
                         <div className='amount'>
                             <TextField 
-                                label={'数额'} 
+                                label={t.public_amount}
+                                // {'数额'} 
                                 fullWidth={false} 
                                 type="text"
                                 onChange={ e => state.sendNum = e.target.value }
@@ -179,7 +191,8 @@ class SendErc extends React.Component {
                             />
                             <TextField
                                 select
-                                label={'选择货币'}
+                                label={t.send_erc_send_select_currency_label}
+                                // {'选择货币'}
                                 value={state.currencyType}
                                 onChange={this.handleCurrencySelect}
                                 style={{margin:'0px 10px 30px',flex:'auto'}}
@@ -192,7 +205,8 @@ class SendErc extends React.Component {
                             </TextField>
                         </div>
                         <TextField
-                            label="付款人"
+                            label={t.send_erc_send_payer_label}
+                            // "付款人"
                             fullWidth={true}
                             type={"text"}
                             placeholder={state.accountAddress}
@@ -212,7 +226,8 @@ class SendErc extends React.Component {
                                                 style={{marginBottom:'12px'}}
                                                 onClick={()=>{ this.setState({showAccountSelect:false }) }}
                                             >
-                                                关闭导入账户
+                                                {/* 关闭导入账户 */}
+                                                {t.send_erc_close_import_account}
                                             </Button>
                                         }                                        
                                     </InputAdornment>
@@ -232,7 +247,8 @@ class SendErc extends React.Component {
                             style={{color:'#fff',margin:'25px 0px'}}
                             onClick={this.send}
                         >
-                            发送交易
+                            {/* 发送交易 */}
+                            {t.send_erc_btn_text}
                         </Button>
                     </div>
                 }
@@ -265,4 +281,4 @@ class SendErc extends React.Component {
 }
     
   
-export default SendErc 
+export default I18n(SendErc) 
