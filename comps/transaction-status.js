@@ -140,7 +140,7 @@ class TransactionStatus extends React.Component {
                             !state.showTransaction ?
                             (
                                 <TextField
-                                    label={'输入交易哈希'} 
+                                    label={'交易哈希'} 
                                     placeholder={'交易哈希通常为0x开头的66位16进制字符串'} 
                                     fullWidth={true}
                                     type="text"

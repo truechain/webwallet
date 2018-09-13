@@ -34,6 +34,9 @@ class Account extends React.Component{
     componentWillUnmount() {
         clearTimeout(this.timer)
         this.setState({isMounted:false})
+        this.setState = (state,callback)=>{
+            return
+        }
     }
 
     handleAddressInput(e){

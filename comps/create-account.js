@@ -27,6 +27,12 @@ class CreateAccount extends React.Component{
         this.downloadKeystore = this.downloadKeystore.bind(this)
     }
 
+    componentWillUnmount() {
+        this.setState = (state,callback)=>{
+            return
+        }        
+    }
+
     createEthAccount(){
         eth_wallet_js.gen_wallet(this.state.accountPwd,res=>{
 

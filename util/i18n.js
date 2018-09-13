@@ -45,9 +45,9 @@ const I18n = (Wrapped)=>{
 
         componentWillUnmount() {
             delete I18n.comps[this.i18nCompKey]
-            if(this.comp.componentWillUnmount){
-                this.comp.componentWillUnmount()
-            }
+            // if(this.comp.componentWillUnmount){
+                // this.comp.componentWillUnmount()
+            // }
         }
 
 
@@ -58,7 +58,7 @@ const I18n = (Wrapped)=>{
               t:lang,
               setLang:this.setLang,
             }
-            return <Wrapped {...props} ref={comp=>{this.comp=comp}} />
+            return <Wrapped {...props} />
         }
     }
 }

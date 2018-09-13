@@ -46,6 +46,9 @@ class Layout extends React.Component {
     componentWillUnmount() { // 生命周期钩子 组件卸载前清除定时器
         clearInterval(this.interval)
         clearTimeout(this.timer)
+        this.setState = (state,callback)=>{
+            return;
+        }
     }
 
     tick() {        

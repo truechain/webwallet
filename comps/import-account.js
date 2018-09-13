@@ -86,6 +86,9 @@ class ImportAccount extends React.Component{
         window.removeEventListener("resize", this.updateDimensions)
         clearTimeout(this.timer)
         this.setState({isMounted:false})
+        this.setState = (state,callback)=>{
+            return;
+        };
         
     }
 
