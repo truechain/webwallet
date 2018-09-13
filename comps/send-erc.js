@@ -67,8 +67,8 @@ class SendErc extends React.Component {
         clearTimeout(this.timer)
         this.setState({isMounted:false})
         this.setState = (state,callback)=>{
-            return;
-        };
+            return
+        }
     }
 
     // 当导入了新的账户时更改使用的付款人地址

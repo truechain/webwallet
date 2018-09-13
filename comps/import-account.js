@@ -87,8 +87,8 @@ class ImportAccount extends React.Component{
         clearTimeout(this.timer)
         this.setState({isMounted:false})
         this.setState = (state,callback)=>{
-            return;
-        };
+            return
+        }
         
     }
 

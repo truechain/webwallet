@@ -47,7 +47,7 @@ class Layout extends React.Component {
         clearInterval(this.interval)
         clearTimeout(this.timer)
         this.setState = (state,callback)=>{
-            return;
+            return
         }
     }
 
