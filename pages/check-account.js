@@ -15,7 +15,8 @@ const CheckAccount = () =>(
                 justify-content:space-around;
                 align-items:flex-start;
                 max-width:1280px;
-                margin:10px 10px 50px;
+                margin:10px auto 50px;
+                padding:10px 15px;
             }
         `}</style>
     </Layout>

@@ -206,7 +206,7 @@ class Layout extends React.Component {
                         flex-wrap:wrap;
                         justify-content:space-between;
                         align-items:center;
-                        max-width:1200px;
+                        max-width:1380px;
                         margin:0px auto;
                         color:white;
                     }
