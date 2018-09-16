@@ -111,9 +111,11 @@ class Layout extends React.Component {
                         name="viewport"
                         content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
                     />
+                    <title>webwallet</title>
                     <script type="text/javascript" src="/static/lightwallet.min.js" ></script>
                     <script src="/static/web3.min.js"></script>
                     <script src="/static/eth-wallet-js.js"></script>
+                    {/* <link rel="stylesheet" href="/static/loading.css" /> */}
                 </Head>
                 <div className='header-wrapper'>
                     <div className='header'>
@@ -189,6 +191,22 @@ class Layout extends React.Component {
                         margin:0px;
                         padding:0px;
                         background-color:#eee;
+                    }
+                    @keyframes left-rotate{
+                        0%  {
+                            transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg)    
+                        }
+                        100%  {
+                            transform: rotateX(360deg) rotateY(180deg) rotateZ(360deg)        
+                        }
+                    }                    
+                    @keyframes right-rotate{
+                        0%  {
+                            transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg)    
+                        }
+                        100% {
+                            transform: rotateX(180deg) rotateY(360deg) rotateZ(360deg)        
+                        }
                     }
                 `}</style>                
                 <style jsx>{`

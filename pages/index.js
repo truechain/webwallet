@@ -2,6 +2,9 @@ import Layout from '../comps/layout'
 import CreateAccount from '../comps/create-account'
 import ImportAccount from '../comps/import-account'
 // import { withI18next } from '../util/withI18next'
+// import RingLoader from 'halogen/RingLoader'
+// let RingLoader = require('halogen/RingLoader')
+import RingLoader from '../util/es6-ring-loader'
 
 
 class Index extends React.Component{
@@ -12,9 +15,10 @@ class Index extends React.Component{
 
     render(){
         const { state, props } = this
-        return (
+        return (            
             <Layout nav={'index'}>
                 <div className='index'>
+                    <RingLoader color="#26A65B" size="60px" margin="4px"/>
                     <CreateAccount step='init'></CreateAccount>
                     <ImportAccount></ImportAccount>
                 </div>
