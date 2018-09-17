@@ -9,3 +9,7 @@ output
 .next
 *.log
 package-lock.json
+
+# log
+nohup.out
+out/nohup.out
