@@ -115,7 +115,6 @@ class Layout extends React.Component {
                     <script type="text/javascript" src="/static/lightwallet.min.js" ></script>
                     <script src="/static/web3.min.js"></script>
                     <script src="/static/eth-wallet-js.js"></script>
-                    {/* <link rel="stylesheet" href="/static/loading.css" /> */}
                 </Head>
                 <div className='header-wrapper'>
                     <div className='header'>

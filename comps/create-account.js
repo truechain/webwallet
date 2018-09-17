@@ -5,10 +5,17 @@ import Split from './split-line'
 import Snack from './snackbar'
 import I18n from '../util/i18n'
 
+import Dialog from '@material-ui/core/Dialog'
+import Slide from '@material-ui/core/Slide'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import RingLoader from '../util/es6-ring-loader'
 
 const log = console.log
 
-
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
 
 class CreateAccount extends React.Component{
 
@@ -18,6 +25,7 @@ class CreateAccount extends React.Component{
             step:props.step,
             accountPwd:'',
             openSnack:false,
+            openLoading:false,  // 打开dialog
         }
         /**step：
          *  'init':初始页面
@@ -25,6 +33,7 @@ class CreateAccount extends React.Component{
          */
         this.createEthAccount = this.createEthAccount.bind(this)
         this.downloadKeystore = this.downloadKeystore.bind(this)
+        this.closeLoading = this.closeLoading.bind(this)
     }
 
     componentWillUnmount() {
@@ -33,8 +42,15 @@ class CreateAccount extends React.Component{
         }        
     }
 
+    // 关闭loading框
+    closeLoading(){
+        this.setState({openLoading:false})
+    }
+
+    // 创建账户
     createEthAccount(){
         const { t } = this.props
+        this.setState({openLoading:true})
         eth_wallet_js.gen_wallet(this.state.accountPwd,res=>{
 
             let { privatekey,address,mnemonic,keystore } = res
@@ -46,7 +62,8 @@ class CreateAccount extends React.Component{
                 accountKeystore:keystore,
                 openSnack:true,
                 message:t.create_account_success_message, //'创建账户成功！',
-                messageType:'success'
+                messageType:'success',
+                openLoading:false
             })
             let storage = window.localStorage
             storage.setItem( 'account', JSON.stringify(res) )
@@ -64,7 +81,21 @@ class CreateAccount extends React.Component{
         let orWords = t.public_or_words // 或者
 
         return (
-            <div style={{flex:'auto',margin:'20px',maxWidth:'600px'}}>    
+            <div style={{flex:'auto',margin:'20px',maxWidth:'600px'}}>
+                <Dialog
+                    open={state.openLoading}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={this.handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogContent>
+                        <RingLoader color="#00ACC1" size="60px" margin="5px"/>
+                        <DialogContentText id="alert-dialog-slide-description">
+                            {/* 加载中... */}
+                        </DialogContentText>
+                    </DialogContent>
+                </Dialog>    
                 <Card raised={true}>
                 {
                     state.step == 'init' &&

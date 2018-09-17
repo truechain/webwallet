@@ -10,7 +10,13 @@ import Snack from './snackbar'
 import I18n from '../util/i18n'
 const log = console.log
 
-
+import Dialog from '@material-ui/core/Dialog'
+import Slide from '@material-ui/core/Slide'
+import DialogContent from '@material-ui/core/DialogContent'
+import RingLoader from '../util/es6-ring-loader'
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
 
 class SendErc extends React.Component {
 
@@ -34,7 +40,8 @@ class SendErc extends React.Component {
             snackOpen:false,
             snackMessage:'',
             snackMessageType:'',
-            txhash:''
+            txhash:'',
+            openLoading:false,
         }
         this.handleCurrencySelect = this.handleCurrencySelect.bind(this)
         this.chooseAccountFocus = this.chooseAccountFocus.bind(this)
@@ -72,6 +79,8 @@ class SendErc extends React.Component {
         }
     }
 
+    
+
     // 当导入了新的账户时更改使用的付款人地址
     updateAddress(address){
         this.setState({accountAddress:address})
@@ -99,7 +108,12 @@ class SendErc extends React.Component {
     send(){
         const { sendTO, sendNum,trueContract } = this.state
         const { privatekey } = this.state.account
-        if(this.state.currencyType=='ether'){            
+        if(this.state.currencyType=='option'){
+            this.setState({snackOpen:true,snackMessage:'请选择发送币种',snackMessageType:'warning'})
+            return
+        }
+        this.setState({openLoading:true})
+        if(this.state.currencyType=='ether'){                        
             eth_wallet_js.send_eth(
                 {
                     to:sendTO,
@@ -109,6 +123,7 @@ class SendErc extends React.Component {
                 },
                 (r)=>{
                     log(r)
+                    this.setState({openLoading:false}) 
                     if(r.err){
                         this.setState({snackOpen:true,snackMessage:'发送交易失败！',snackMessageType:'error'})
                     }else{
@@ -131,6 +146,7 @@ class SendErc extends React.Component {
                     privatekey,
                 },
                 (r)=>{
+                    this.setState({openLoading:false}) 
                     log(r)
                     if(r.err){
                         this.setState({snackOpen:true,snackMessage:'发送交易失败！',snackMessageType:'error'})
@@ -138,7 +154,7 @@ class SendErc extends React.Component {
                         if(this.state.isMounted){
                             this.setState({ 
                                 txhash:r.txhash,
-                                snackOpen:true,snackMessage:'发送交易成功！',snackMessageType:'success'
+                                snackOpen:true,snackMessage:'发送交易成功！等待区块确认...',snackMessageType:'success'
                             })
                         }                        
                     }
@@ -166,6 +182,15 @@ class SendErc extends React.Component {
                     status={state.snackOpen}
                     closeSnack={ ()=>{ this.setState({snackOpen:false}) }}
                 />
+                <Dialog
+                    open={state.openLoading}
+                    TransitionComponent={Transition}
+                    keepMounted
+                >
+                    <DialogContent>
+                        <RingLoader color="#00ACC1" size="60px" margin="5px"/>
+                    </DialogContent>
+                </Dialog>    
                 <Card raised={true} style={ { marginBottom:'20px' } } >
                 { 
                     state.step =='send' &&

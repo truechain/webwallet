@@ -2,6 +2,14 @@ import I18n from '../util/i18n'
 import Card from '@material-ui/core/Card'
 import TextField from '@material-ui/core/TextField'
 
+import Dialog from '@material-ui/core/Dialog'
+import Slide from '@material-ui/core/Slide'
+import DialogContent from '@material-ui/core/DialogContent'
+import RingLoader from '../util/es6-ring-loader'
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
+
 class TransactionStatus extends React.Component {
     constructor(props){
         super(props)
@@ -15,10 +23,12 @@ class TransactionStatus extends React.Component {
             sendDescr:'',
             isMounted:false,
             showTransaction:false,
+            openLoading:false
         }
         this.traceTransaction = this.traceTransaction.bind(this)
         this.handleTxhashInput = this.handleTxhashInput.bind(this)
         this.parseSendInfo = this.parseSendInfo.bind(this)
+        this.closeLoading = this.closeLoading.bind(this)
     }
 
     componentDidMount() {
@@ -40,6 +50,14 @@ class TransactionStatus extends React.Component {
         clearTimeout(this.timer)
         clearInterval(this.interval)
         this.setState({isMounted:false})
+        this.setState = (state,callback)=>{
+            return
+        }
+    }
+
+    // 关闭loading
+    closeLoading(){
+        this.setState({openLoading:false})
     }
 
     // 追踪交易
@@ -50,7 +68,8 @@ class TransactionStatus extends React.Component {
         web3.eth.getTransactionReceipt(txhash)
         .then(rece=>{
             log('in get transaction receipt',rece)
-            if(rece){              
+            if(rece){  
+                this.setState({openLoading:false})            
 
                 if(rece.blockNumber){ txStatus.txBlockNum= rece.blockNumber }
                 let { from, to } = rece
@@ -100,7 +119,7 @@ class TransactionStatus extends React.Component {
                     txStatus.sendStatusText= '失败'
                     this.setState(txStatus)
                 }                
-            }          
+            }  
         })
     }
 
@@ -110,11 +129,13 @@ class TransactionStatus extends React.Component {
         let val =  e.target.value
         if( (val.length ==64) && ( val.indexOf("0x") < 0 ) ){            
             val = "0x"+val
-            this.setState({txhash:val})
+            log('here1')
+            this.setState({ txhash:val, openLoading:true })
             this.traceTransaction(val)    
         }
         if( (val.length == 66) && ( val.indexOf("0x") == 0 ) ){
-            this.setState({txhash:val})
+            log('here2')
+            this.setState({ txhash:val, openLoading:true })
             this.traceTransaction(val)
         }
     }
@@ -135,6 +156,16 @@ class TransactionStatus extends React.Component {
 
         return (
             <div className="trans-status">
+                <Dialog
+                    open={state.openLoading}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={this.closeLoading}
+                >
+                    <DialogContent>
+                        <RingLoader color="#00ACC1" size="60px" margin="5px"/>
+                    </DialogContent>
+                </Dialog>
                 <Card raised={true}>
                     <div className="trans-card">
                     {
@@ -143,8 +174,9 @@ class TransactionStatus extends React.Component {
                                 <TextField
                                     label={t.public_transaction_hash}
                                     // {'交易哈希'} 
-                                    placeholder={t.public_txhash_tip}
+                                    placeholder={t.public_txhash_tip}                                   
                                     // {'交易哈希通常为0x开头的66位16进制字符串'} 
+                                    defaultValue={props.txhash}
                                     fullWidth={true}
                                     type="text"
                                     onChange={this.handleTxhashInput}
