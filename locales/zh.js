@@ -1,5 +1,5 @@
 export default {
-    layout_app_name:'在线钱包',
+    layout_app_name:'True在线钱包',
     layout_version:'v1.01',
     layout_current_language:'当前语言',
     layout_current_node:'当前连接以太坊节点',

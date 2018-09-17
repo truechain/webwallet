@@ -111,7 +111,7 @@ class Layout extends React.Component {
                         name="viewport"
                         content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
                     />
-                    <title>webwallet</title>
+                    <title>True wallet</title>
                     <script type="text/javascript" src="/static/lightwallet.min.js" ></script>
                     <script src="/static/web3.min.js"></script>
                     <script src="/static/eth-wallet-js.js"></script>

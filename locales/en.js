@@ -1,5 +1,5 @@
 export default {
-    layout_app_name:'webwallet',
+    layout_app_name:'True webwallet',
     layout_version:'v1.01',
     layout_current_language:'current language',
     layout_current_node:'current connection to ethereum node',
