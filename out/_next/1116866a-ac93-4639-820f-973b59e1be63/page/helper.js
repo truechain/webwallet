@@ -1,1 +1,0 @@
-module.exports=__NEXT_REGISTER_PAGE("/helper",function(){return{page:webpackJsonp([6],{543:function(e,t,n){e.exports=n(544)},544:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(0),u=n.n(r),a=n(77);t.default=function(){return u.a.createElement(a.a,{nav:"helper"},u.a.createElement("p",null))}}},[543]).default}});
