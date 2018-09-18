@@ -114,7 +114,7 @@ class Layout extends React.Component {
                     <title>True wallet</title>
                     <script type="text/javascript" src="/static/lightwallet.min.js" ></script>
                     <script src="/static/web3.min.js"></script>
-                    <script src="/static/eth-wallet-js.js"></script>
+                    <script src="/static/eth-wallet-js.js?t=1011"></script>
                 </Head>
                 <div className='header-wrapper'>
                     <div className='header'>
