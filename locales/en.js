@@ -51,6 +51,6 @@ export default {
     public_send_words:'Send',
     public_transaction_status:'Transaction status',
     gen_account:"create account",
-    eth_balance:"ether balance",
+    eth_balance:"Ether balance",
     true_balance:"True balance",
 }

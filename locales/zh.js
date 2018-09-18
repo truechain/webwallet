@@ -51,7 +51,7 @@ export default {
     public_send_words:'发送',
     public_transaction_status:'交易状态',
     gen_account:"创建账户",
-    eth_balance:"以太坊余额",
+    eth_balance:"ETH余额",
     true_balance:"True余额",
     
 }

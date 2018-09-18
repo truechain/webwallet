@@ -27,8 +27,8 @@ class SendErc extends React.Component {
             currencyType:'option',
             currencies:[
                 {label:'选择币种',value:'option'},
-                {label:'ether',value:'ether'},
-                {label:'true',value:'true'},
+                {label:'ETH',value:'ether'},
+                {label:'TRUE',value:'true'},
                 // {label:'其它货币',value:'other'},
             ],
             sendTO:'',

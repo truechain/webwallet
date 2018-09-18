@@ -208,7 +208,7 @@ class ImportAccount extends React.Component{
                 showPrivatekeyBtn:true
             })
         }else{
-            this.setState({ showPrivatekeyBtn:false })
+            this.setState({ showPrivatekeyBtn:false,privatekey:val })
         }
     }
 
@@ -219,7 +219,7 @@ class ImportAccount extends React.Component{
             'privatekey',privatekey,
             account=>{
                 this.storeAccount(account)
-                this.setState({message:'导入账户成功',openSnack:true,messageType:'success'})
+                this.setState({message:'导入账户成功',openSnack:true,messageType:'success',privatekey:''})
                 this.showCurrentAccount()
             }
         )
@@ -235,7 +235,7 @@ class ImportAccount extends React.Component{
                 showMnemonicBtn:true
             })
         }else{
-            this.setState({ showMnemonicBtn:false })
+            this.setState({ showMnemonicBtn:false,mnemonic:val })
         }
     }
     // 助记词导入
@@ -247,7 +247,7 @@ class ImportAccount extends React.Component{
             account=>{ 
                 log(account) 
                 comp.storeAccount(account)
-                comp.setState({message:'导入账户成功',openSnack:true,messageType:'success'})
+                comp.setState({message:'导入账户成功',openSnack:true,messageType:'success',mnemonic:''})
                 comp.showCurrentAccount()
             }
         )
@@ -401,6 +401,7 @@ class ImportAccount extends React.Component{
                                         type="text"
                                         onChange={this.handlePrivatekeyInput}
                                         style={{margin:'35px 0px'}}
+                                        value={state.privatekey}
                                     />
                                     {
                                         state.showPrivatekeyBtn &&
@@ -427,6 +428,8 @@ class ImportAccount extends React.Component{
                                         type="text"
                                         onChange={this.handleMnemonicInput }
                                         style={{margin:'35px 0px'}}
+                                        value={state.mnemonic}
+                                        multiline={true}
                                     />
                                     {
                                         state.showMnemonicBtn &&

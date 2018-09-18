@@ -138,6 +138,8 @@ class Layout extends React.Component {
                                                     aria-haspopup="true"
                                                     onClick={this.selectLang}
                                                     style={{color:'white'}}
+                                                    variant="contained"
+                                                    color="secondary"
                                                 >
                                                     {state.langLabel}
                                                 </Button>
