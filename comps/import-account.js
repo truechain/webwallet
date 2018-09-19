@@ -38,7 +38,8 @@ class ImportAccount extends React.Component{
             messageType:'',
             windowInnerWidth:0,
             accountEthBalance:'0',
-            accountTrueBalance:'0',
+            accountTrueBalance:'0',            
+            accountTtrBalance:'0',
             isMounted:false,
         }
         // log(this)
@@ -103,6 +104,15 @@ class ImportAccount extends React.Component{
                         )
                     }                    
             })
+            // 得到ttr web3智能合约对象
+            eth_wallet_js.get_contract(
+                '0xf2bb016e8c9c8975654dcd62f318323a8a79d48e',
+                (r)=>{
+                    this.setState(
+                        {ttrContract:r},
+                        ()=>{ this.showCurrentAccount() }
+                    )             
+            })
         }, 200 )
         this.showCurrentAccount()     
     }
@@ -148,6 +158,7 @@ class ImportAccount extends React.Component{
             }
             if(account.ether){ accountState.accountEthBalance = account.ether }
             if(account.trueToken){ accountState.accountTrueBalance = account.trueToken }
+            if(account.ttrToken){ accountState.accountTtrBalance = account.ttrToken }
             this.setState(accountState)
             
             let query = {address:account.address}
@@ -165,6 +176,20 @@ class ImportAccount extends React.Component{
                         storage.setItem( 'account', JSON.stringify(account) )
                     }                    
             })
+            //如果有ttr 合约对象请求ttr余额
+            if(this.state.ttrContract){
+                eth_wallet_js.get_balance(
+                    {
+                        address:account.address,
+                        contract:this.state.ttrContract
+                    },
+                    (r)=>{
+                        if(r.token){ accountState.accountTtrBalance = r.token }                      
+                        this.setState(accountState)
+                        account.ttrToken = r.token
+                        storage.setItem( 'account', JSON.stringify(account) )
+                })
+            }
         }        
     }
 
@@ -375,9 +400,14 @@ class ImportAccount extends React.Component{
                                             <span className="primary-text">{state.accountEthBalance}</span>
                                             <span className="meta-text">
                                                 {/* True余额： */}
-                                                {t.import_account_account_True_balance_label}
+                                                {t.true_balance}
                                             </span>
                                             <span className="primary-text">{state.accountTrueBalance}</span>
+                                            <span className="meta-text">
+                                                {/* TTR余额： */}
+                                                {t.ttr_balance}
+                                            </span>
+                                            <span className="primary-text">{state.accountTtrBalance}</span>
                                         </p>
                                         <Button 
                                             variant="contained" 

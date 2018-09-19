@@ -29,13 +29,13 @@ class SendErc extends React.Component {
                 {label:'选择币种',value:'option'},
                 {label:'ETH',value:'ether'},
                 {label:'TRUE',value:'true'},
+                {label:'TTR',value:'ttr'},
                 // {label:'其它货币',value:'other'},
             ],
             sendTO:'',
             sendNum:'',
             showAccountSelect:false,
             accountAddress:'',
-            isMounted:false,
             txhash:'',
             snackOpen:false,
             snackMessage:'',
@@ -63,17 +63,19 @@ class SendErc extends React.Component {
             eth_wallet_js.get_contract(
                 '0xa4d17ab1ee0efdd23edc2869e7ba96b89eecf9ab',
                 (r)=>{
-                    if(this.state.isMounted){
-                        this.setState({trueContract:r})
-                    }                    
+                    this.setState({trueContract:r})
+            })
+            // 得到ttr web3智能合约对象
+            eth_wallet_js.get_contract(
+                '0xf2bb016e8c9c8975654dcd62f318323a8a79d48e',
+                (r)=>{
+                    this.setState({ttrContract:r})
             })
         },200)
-        this.setState({isMounted:true})
     }
 
     componentWillUnmount() {
         clearTimeout(this.timer)
-        this.setState({isMounted:false})
         this.setState = (state,callback)=>{
             return
         }
@@ -106,8 +108,13 @@ class SendErc extends React.Component {
 
     // 发送代币或者以太坊
     send(){
-        const { sendTO, sendNum,trueContract } = this.state
+        const { sendTO, sendNum,trueContract,ttrContract } = this.state
         const { privatekey } = this.state.account
+        //校验发送地址 如果不是 以0x开头的42位 返回提示
+        if(! ( (val.length == 42) && ( val.indexOf("0x") == 0 ) ) ){
+            this.setState({snackOpen:true,snackMessage:'地址通常为以0x开头的42位16进制文本',snackMessageType:'warning'})
+            return
+        }
         if(this.state.currencyType=='option'){
             this.setState({snackOpen:true,snackMessage:'请选择发送币种',snackMessageType:'warning'})
             return
@@ -127,12 +134,10 @@ class SendErc extends React.Component {
                     if(r.err){
                         this.setState({snackOpen:true,snackMessage:'发送交易失败！',snackMessageType:'error'})
                     }else{
-                        if(this.state.isMounted){
-                            this.setState({ 
-                                txhash:r.txhash,
-                                snackOpen:true,snackMessage:'发送交易成功！',snackMessageType:'success'
-                            })
-                        }                        
+                        this.setState({ 
+                            txhash:r.txhash,
+                            snackOpen:true,snackMessage:'发送交易成功！',snackMessageType:'success'
+                        })                  
                     }
                 }
             )
@@ -151,12 +156,32 @@ class SendErc extends React.Component {
                     if(r.err){
                         this.setState({snackOpen:true,snackMessage:'发送交易失败！',snackMessageType:'error'})
                     }else{
-                        if(this.state.isMounted){
-                            this.setState({ 
-                                txhash:r.txhash,
-                                snackOpen:true,snackMessage:'发送交易成功！等待区块确认...',snackMessageType:'success'
-                            })
-                        }                        
+                        this.setState({ 
+                            txhash:r.txhash,
+                            snackOpen:true,snackMessage:'发送交易成功！等待区块确认...',snackMessageType:'success'
+                        })               
+                    }
+                }
+            )
+        }
+        if(this.state.currencyType=='ttr'){
+            eth_wallet_js.send_token(
+                {
+                    to:sendTO,
+                    val:sendNum,
+                    contract:ttrContract,
+                    privatekey,
+                },
+                (r)=>{
+                    this.setState({openLoading:false}) 
+                    log(r)
+                    if(r.err){
+                        this.setState({snackOpen:true,snackMessage:'发送交易失败！',snackMessageType:'error'})
+                    }else{
+                        this.setState({ 
+                            txhash:r.txhash,
+                            snackOpen:true,snackMessage:'发送交易成功！等待区块确认...',snackMessageType:'success'
+                        })               
                     }
                 }
             )

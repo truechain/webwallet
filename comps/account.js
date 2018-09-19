@@ -10,11 +10,13 @@ class Account extends React.Component{
         this.state ={
             accountAddress:'',
             accountEthBalance:0,
-            accountTrueBalance:0,
+            accountTrueBalance:0,            
+            accountTtrBalance:0,
             showAccount:false,
             isMounted:false,
         }
         this.handleAddressInput = this.handleAddressInput.bind(this)
+        this.balanceOf = this.balanceOf.bind(this)
     }
 
     componentDidMount() {
@@ -28,6 +30,12 @@ class Account extends React.Component{
                         this.setState({trueContract:r})
                     }                    
             })
+            // 得到ttr web3智能合约对象
+            eth_wallet_js.get_contract(
+                '0xf2bb016e8c9c8975654dcd62f318323a8a79d48e',
+                (r)=>{
+                    this.setState({ttrContract:r})
+            })
         }, 200 )
     }
 
@@ -39,38 +47,49 @@ class Account extends React.Component{
         }
     }
 
+    // 输入地址时
     handleAddressInput(e){
         let val =  e.target.value
-        let query = {}
-        let accountState = {}       
         if( (val.length ==40) && ( val.indexOf("0x") < 0 ) ){            
-            val = "0x"+val
-            query.address = val
-            if(this.state.trueContract){ query.contract = this.state.trueContract }
-            eth_wallet_js.get_balance(
-                query,
-                r=>{ log(r)
-                    accountState = { 
-                        showAccount:true, accountAddress:val,
-                        accountEthBalance:r.ether  
-                    }
-                    if(r.token){ accountState.accountTrueBalance = r.token }                      
-                    this.setState(accountState)
-            })            
+            val = "0x" + val
+            this.balanceOf( val )
         }
         if( (val.length == 42) && ( val.indexOf("0x") == 0 ) ){
-            query.address = val
-            if(this.state.trueContract){ query.contract = this.state.trueContract }
+            this.balanceOf( val )
+        }
+    }
+
+    // 根据地址获取账户余额
+    balanceOf(address){
+        let accountState = {}
+        if(this.state.trueContract){
             eth_wallet_js.get_balance(
-                query,
-                r=>{ log(r)
+                {
+                    address,
+                    contract:this.state.trueContract
+                },
+                r=>{
                     accountState = { 
-                        showAccount:true, accountAddress:val,
+                        showAccount:true, accountAddress:address,
                         accountEthBalance:r.ether  
                     }
                     if(r.token){ accountState.accountTrueBalance = r.token }                      
-                    this.setState(accountState)
+                    this.setState( accountState )
             })
+        }
+        if(this.state.ttrContract){
+            eth_wallet_js.get_balance(
+                {
+                    address,
+                    contract:this.state.ttrContract
+                },
+                r=>{
+                    if(r.token){ 
+                        accountState.accountTtrBalance = r.token 
+                        this.setState( accountState )
+                    } 
+                }
+            )
         }
     }
 
@@ -118,6 +137,11 @@ class Account extends React.Component{
                                             {t.true_balance}:
                                         </span>
                                         <span className="primary-text">{state.accountTrueBalance}</span>
+                                        <span className="meta-text">
+                                            {/* TTR余额： */}
+                                            {t.ttr_balance}:
+                                        </span>
+                                        <span className="primary-text">{state.accountTtrBalance}</span>
                                     </p>
                                 </div>
                             )

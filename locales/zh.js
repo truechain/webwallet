@@ -21,7 +21,6 @@ export default {
     import_account_title:'导入账户',
     import_account_how_use_title:'你将怎样使用账户?',   
     import_account_account_addres_label:'账户地址',   
-    import_account_account_True_balance_label:'True余额', 
     import_account_account_exit_current_account:'退出当前账户',  
     import_account_account_tab_label_privatekey:'私钥',  
     import_account_account_tab_label_mnemonic:'助记词',  
@@ -53,5 +52,6 @@ export default {
     gen_account:"创建账户",
     eth_balance:"ETH余额",
     true_balance:"True余额",
+    ttr_balance:"TTR余额",
     
 }

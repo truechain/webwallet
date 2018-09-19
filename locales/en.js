@@ -20,8 +20,7 @@ export default {
     create_account_success_message:'create account success!',
     import_account_title:'import account',
     import_account_how_use_title:'How would you like to access your wallet?', 
-    import_account_account_addres_label:'account address',    
-    import_account_account_True_balance_label:'True balance',   
+    import_account_account_addres_label:'account address',  
     import_account_account_exit_current_account:'quit current account',   
     import_account_account_tab_label_privatekey:'private key',  
     import_account_account_tab_label_mnemonic:'mnemonic',  
@@ -53,4 +52,5 @@ export default {
     gen_account:"create account",
     eth_balance:"Ether balance",
     true_balance:"True balance",
+    ttr_balance:"TTR balance",
 }
