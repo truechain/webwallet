@@ -1,6 +1,6 @@
-import Layout from '../comps/layout'
-import CreateAccount from '../comps/create-account'
-import ImportAccount from '../comps/import-account'
+// import Layout from '../comps/layout'
+// import CreateAccount from '../comps/create-account'
+// import ImportAccount from '../comps/import-account'
 
 
 

@@ -1,4 +1,4 @@
-import Layout from '../comps/layout'
+// import Layout from '../comps/layout'
 
 
 const Helper = () =>(
