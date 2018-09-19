@@ -15,3 +15,7 @@ snackbar.js
 # log
 nohup.out
 out/nohup.out
+
+# other files
+pages/_app.js
+pages/_document.js
