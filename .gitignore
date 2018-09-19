@@ -9,6 +9,8 @@ output
 .next
 *.log
 package-lock.json
+send-erc.js
+snackbar.js
 
 # log
 nohup.out
