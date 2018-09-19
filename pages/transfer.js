@@ -1,5 +1,5 @@
-// import Layout from '../comps/layout'
-// import SendErc from '../comps/send-erc'
+import Layout from '../comps/layout'
+import SendErc from '../comps/send-erc'
 
 class Transfer extends React.Component{
     constructor(props) {

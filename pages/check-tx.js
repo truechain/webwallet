@@ -1,5 +1,5 @@
-// import Layout from '../comps/layout'
-// import TransactionStatus from '../comps/transaction-status'
+import Layout from '../comps/layout'
+import TransactionStatus from '../comps/transaction-status'
 
 
 const CheckTx = () =>(

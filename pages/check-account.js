@@ -1,5 +1,5 @@
-// import Layout from '../comps/layout'
-// import Account from '../comps/account'
+import Layout from '../comps/layout'
+import Account from '../comps/account'
 
 
 const CheckAccount = () =>(
