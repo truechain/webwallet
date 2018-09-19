@@ -111,7 +111,7 @@ class SendErc extends React.Component {
         const { sendTO, sendNum,trueContract,ttrContract } = this.state
         const { privatekey } = this.state.account
         //校验发送地址 如果不是 以0x开头的42位 返回提示
-        if(! ( (val.length == 42) && ( val.indexOf("0x") == 0 ) ) ){
+        if(! ( (sendTO.length == 42) && ( sendTO.indexOf("0x") == 0 ) ) ){
             this.setState({snackOpen:true,snackMessage:'地址通常为以0x开头的42位16进制文本',snackMessageType:'warning'})
             return
         }
