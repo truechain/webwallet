@@ -1,6 +1,6 @@
 export default {
     layout_app_name:'True webwallet',
-    layout_version:'v1.01',
+    layout_version:'v1.1.2',
     layout_current_language:'current language',
     layout_current_node:'current connection to ethereum node',
     layout_current_average_gas_price:'current network average gas price',
