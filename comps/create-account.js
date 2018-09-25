@@ -4,6 +4,11 @@ import Button from '@material-ui/core/Button'
 import Split from './split-line'
 import Snack from './snackbar'
 import I18n from '../util/i18n'
+import IconButton from '@material-ui/core/IconButton'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+
 
 import Dialog from '@material-ui/core/Dialog'
 import Slide from '@material-ui/core/Slide'
@@ -26,6 +31,7 @@ class CreateAccount extends React.Component{
             accountPwd:'',
             openSnack:false,
             openLoading:false,  // 打开dialog
+            showPassword: false,
         }
         /**step：
          *  'init':初始页面
@@ -111,8 +117,22 @@ class CreateAccount extends React.Component{
                             // {'建议设置9位或以上的强密码'} 
                             fullWidth={true} 
                             id="pwd" 
-                            type="password"
+                            type={this.state.showPassword ? 'text' : 'password'}
                             onChange={ e => state.accountPwd = e.target.value }
+                            InputProps={{
+                                endAdornment: (
+                                  <InputAdornment variant="filled" position="end">
+                                    <IconButton
+                                      aria-label="Toggle password visibility"
+                                      onClick={
+                                          ()=>this.setState( state => ({ showPassword: !state.showPassword }) )
+                                      }
+                                    >
+                                      {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                  </InputAdornment>
+                                ),
+                              }}
                         />
                         <Button 
                             variant="contained" 
