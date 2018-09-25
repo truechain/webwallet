@@ -25,6 +25,8 @@ class Layout extends React.Component {
             langs:[
                 {label:'中文',val:'zh'},
                 {label:'English',val:'en'},
+                {label:'Tiếng Việt',val:'vn'},
+                {label:'ภาษาไทย',val:'th'},
             ] 
         }
         this.navChange = this.navChange.bind(this)
@@ -217,7 +219,8 @@ class Layout extends React.Component {
                         flex-direction:column;
                     }
                     .header-wrapper {
-                        background-color:#00ACC1;                
+                        background-color:#00ACC1;
+                        background: linear-gradient(to right, #4caf50, #00ACC1);                
                     }
                     .header {
                         display: flex;
@@ -256,7 +259,12 @@ class Layout extends React.Component {
                     .header-right-detail {
                         font-size:16px;
                         font-weigth:600;
-                    }                    
+                    }
+                    @media screen and (max-width:560px) {
+                        .header-wrapper {
+                            background: linear-gradient(to bottom, #4caf50, #00ACC1);                
+                        }
+                    }                                      
                 `}</style>
             </div>
         )

@@ -1,5 +1,7 @@
 import en from '../locales/en.js'
 import zh from '../locales/zh.js'
+import th from '../locales/th.js'
+import vn from '../locales/vn.js'
 
 const log = console.log
 
@@ -11,7 +13,7 @@ function getRandomInt(min, max){
 
 const I18n = (Wrapped)=>{
     
-    I18n.langs = { zh, en }  //当前的语言文件
+    I18n.langs = { zh, en, th, vn, }  //当前的语言文件
     I18n.defaultLang = I18n.langs['zh'] //相关语言里找不到对应key值时fallback回该语言
     I18n.langCode = I18n.langCode || 'zh'  // 初始默认语言
     I18n.chooseLang = I18n.langs[ I18n.langCode ]  //当前选择的语言
