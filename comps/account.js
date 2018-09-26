@@ -12,6 +12,7 @@ class Account extends React.Component{
             accountEthBalance:0,
             accountTrueBalance:0,            
             accountTtrBalance:0,
+            accountTruebetaBalance:0,
             showAccount:false,
             isMounted:false,
         }
@@ -91,6 +92,15 @@ class Account extends React.Component{
                 }
             )
         }
+        let web3 = eth_wallet_js.web3
+        let truebeta = new Web3.modules.ETrue('https://www.truewallet.net/true-beta-node/');
+        truebeta.getBalance(address)
+        .then((res)=>{
+            if(res){
+                accountState.accountTruebetaBalance = web3.utils.fromWei(res)
+                this.setState( accountState )
+            }
+        })
     }
 
     render(){
@@ -142,6 +152,11 @@ class Account extends React.Component{
                                             {t.ttr_balance}:
                                         </span>
                                         <span className="primary-text">{state.accountTtrBalance}</span>
+                                        <span className="meta-text">
+                                            {/* TRUe： */}
+                                            True beta:
+                                        </span>
+                                        <span className="primary-text">{state.accountTruebetaBalance}</span>
                                     </p>
                                 </div>
                             )

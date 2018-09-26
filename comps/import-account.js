@@ -40,6 +40,7 @@ class ImportAccount extends React.Component{
             accountEthBalance:'0',
             accountTrueBalance:'0',            
             accountTtrBalance:'0',
+            accountTruebetaBalance:0,
             isMounted:false,
         }
         // log(this)
@@ -159,6 +160,7 @@ class ImportAccount extends React.Component{
             if(account.ether){ accountState.accountEthBalance = account.ether }
             if(account.trueToken){ accountState.accountTrueBalance = account.trueToken }
             if(account.ttrToken){ accountState.accountTtrBalance = account.ttrToken }
+            if(account.truebeta){ accountState.accountTruebetaBalance = account.truebeta }
             this.setState(accountState)
             
             let query = {address:account.address}
@@ -190,6 +192,15 @@ class ImportAccount extends React.Component{
                         storage.setItem( 'account', JSON.stringify(account) )
                 })
             }
+            let web3 = eth_wallet_js.web3
+            let truebeta = new Web3.modules.ETrue('https://www.truewallet.net/true-beta-node/');
+            truebeta.getBalance(account.address)
+            .then((res)=>{
+                if(res){
+                    accountState.accountTruebetaBalance = web3.utils.fromWei(res)
+                    this.setState( accountState )
+                }
+            })
         }        
     }
 
@@ -227,7 +238,7 @@ class ImportAccount extends React.Component{
     // 输入私钥时
     handlePrivatekeyInput(e){
         let val =  e.target.value
-        if( (val.length==64) || (val.length==66) ){
+        if( (val.length==64) || (val.length==66) || (val=='0x01') ){
             this.setState({
                 privatekey:val,
                 showPrivatekeyBtn:true
@@ -408,6 +419,11 @@ class ImportAccount extends React.Component{
                                                 {t.ttr_balance}
                                             </span>
                                             <span className="primary-text">{state.accountTtrBalance}</span>
+                                            <span className="meta-text">
+                                                {/* TRUe： */}
+                                                True beta:
+                                            </span>
+                                            <span className="primary-text">{state.accountTruebetaBalance}</span>
                                         </p>
                                         <Button 
                                             variant="contained" 
