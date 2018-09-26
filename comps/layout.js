@@ -32,6 +32,7 @@ class Layout extends React.Component {
         this.navChange = this.navChange.bind(this)
         this.selectLang = this.selectLang.bind(this)
         this.setLang = this.setLang.bind(this)
+        this.addPageStat = this.addPageStat.bind(this)
     }
 
     componentDidMount() { // 生命周期钩子 组件渲染完成后
@@ -43,6 +44,7 @@ class Layout extends React.Component {
                this.setState({langLabel:item.label})
            }
        })
+       this.addPageStat()
     }
 
     componentWillUnmount() { // 生命周期钩子 组件卸载前清除定时器
@@ -83,6 +85,20 @@ class Layout extends React.Component {
         })
         let { label, val } = lang
         this.setState({ anchorEl: null,langLabel:label,langCode:val });
+        this.addPageStat()
+    }
+
+    // 添加统计脚本
+    addPageStat(){
+        setTimeout(()=>{
+            let existEl = document.getElementById("page_stat")
+            if(existEl){ document.body.removeChild( existEl ) }
+            let scriptEl = document.createElement("script")
+            scriptEl.type = "text/javascript"
+            scriptEl.id = "page_stat"
+            scriptEl.src = "//s19.cnzz.com/z_stat.php?id=1274893188&web_id=1274893188";
+            document.body.appendChild(scriptEl)
+        },200)
     }
 
     
@@ -197,19 +213,22 @@ class Layout extends React.Component {
                     }
                     @keyframes left-rotate{
                         0%  {
-                            transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg)    
+                            transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);    
                         }
                         100%  {
-                            transform: rotateX(360deg) rotateY(180deg) rotateZ(360deg)        
+                            transform: rotateX(360deg) rotateY(180deg) rotateZ(360deg);        
                         }
                     }                    
                     @keyframes right-rotate{
                         0%  {
-                            transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg)    
+                            transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);    
                         }
                         100% {
-                            transform: rotateX(180deg) rotateY(360deg) rotateZ(360deg)        
+                            transform: rotateX(180deg) rotateY(360deg) rotateZ(360deg);        
                         }
+                    }
+                    a[title=站长统计] {
+                        display:none;
                     }
                 `}</style>                
                 <style jsx>{`
