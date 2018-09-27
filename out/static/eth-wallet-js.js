@@ -172,15 +172,18 @@ var log = console.log;
      * 传入参数对象: 
      *   address:  账户以太坊地址
      *   contract: 合约对象 (可不传，默认查以太坊余额 通过调用ewj.get_contract得到合约对象)
+     *   truebeta: 默认值:true 会返回 truebeta数   false: 不返回truebeta 
      * 返回对象：
      * {
      *   gwei:xx,
      *   wei: xx,
      *   ether:xx,
      *   token:xx //如果传入第二个参数的话，则这个字段返回代币余额
+     *   truebeta:xx //truebeta数量
      * }
      */
     ewj.get_balance = function(obj,cb){
+        var truebeta = obj.truebeta || true;
         web3.eth.getBalance(obj.address)
         .then(function(res){
             var gweistr = web3.utils.fromWei(res,'gwei') ;
@@ -204,7 +207,7 @@ var log = console.log;
             }else{
                 cb(r);
             }
-        })
+        });
     }
 
     /**
