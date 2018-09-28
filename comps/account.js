@@ -94,7 +94,10 @@ class Account extends React.Component{
         }
         let web3 = eth_wallet_js.web3
         let useprotocol = window.location.protocol
-        let truebeta = new Web3.modules.ETrue(useprotocol+'//www.truewallet.net/true-beta-node/')
+        let truebetaurl = ''
+        // truebetaurl = 'https://www.truescan.net/rpc/'
+        truebetaurl = useprotocol+'//www.truewallet.net/true-beta-node/'
+        let truebeta = new Web3.modules.ETrue(truebetaurl)
         truebeta.getBalance(address)
         .then((res)=>{
             if(res){
