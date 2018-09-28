@@ -1,6 +1,6 @@
 export default {
     layout_app_name:'Trueกระเป๋าเงินออนไลน์',
-    layout_version:'v1.1.2',
+    layout_version:'v1.1.3',
     layout_current_language:'ภาษาตอนนี้',
     layout_current_node:'ตอนนี้ติดต่อกับโหนดEthereum ',
     layout_current_average_gas_price:'ราคาก๊าซเฉลี่ยของเครือข่ายตอนนี้ ',

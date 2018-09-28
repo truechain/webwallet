@@ -72,7 +72,8 @@ class CreateAccount extends React.Component{
                 openLoading:false
             })
             let storage = window.localStorage
-            storage.setItem( 'account', JSON.stringify(res) )
+            let account = { address, privatekey }
+            storage.setItem( 'account', JSON.stringify(account) )
         })
     }
 

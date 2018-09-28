@@ -98,7 +98,7 @@ class Layout extends React.Component {
             scriptEl.id = "page_stat"
             scriptEl.src = "//s19.cnzz.com/z_stat.php?id=1274893188&web_id=1274893188";
             document.body.appendChild(scriptEl)
-        },200)
+        },200);
     }
 
     
@@ -109,7 +109,7 @@ class Layout extends React.Component {
         let { t,setLang } = props
         const headerRight = [
             { descr:t.layout_current_language, detail:state.langLabel, key:'language' },
-            { descr:t.layout_current_node, detail:'infura', key:'node' },
+            // { descr:t.layout_current_node, detail:'infura', key:'node' },
             { descr:t.layout_current_average_gas_price, detail:state.gasPrice, key:'gasPrice' },
         ]
         const navs = [
