@@ -100,8 +100,6 @@ class Layout extends React.Component {
             document.body.appendChild(scriptEl)
         },200);
     }
-
-    
     
     
     render(){
@@ -110,7 +108,7 @@ class Layout extends React.Component {
         const headerRight = [
             { descr:t.layout_current_language, detail:state.langLabel, key:'language' },
             // { descr:t.layout_current_node, detail:'infura', key:'node' },
-            { descr:t.layout_current_average_gas_price, detail:state.gasPrice, key:'gasPrice' },
+            { descr:t.layout_current_average_gas_price, detail:state.gasPrice, key:'gasPrice' },  //当前网络平均gas价格
         ]
         const navs = [
             { label:t.layout_nav_index, val:'index' },  //label:创建/导入钱包
