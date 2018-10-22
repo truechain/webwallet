@@ -53,6 +53,4 @@ export default {
     gen_account:"tạo tài khoản",
     Eth_balance:" số sư Ether",
     true_balance:"số dư True",
-
-    
 }

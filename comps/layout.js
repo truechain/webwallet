@@ -141,7 +141,10 @@ class Layout extends React.Component {
                                 {/* 在线钱包 */}
                                 {t.layout_app_name}
                             </div>
-                            <div className='header-left-version'>v1.0.1</div>
+                            <div className='header-left-version'>
+                                {/* v1.0.1 */}
+                                {t.layout_version}
+                            </div>
                         </div>
                         <div className='header-right'>
                             { 
