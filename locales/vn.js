@@ -3,7 +3,7 @@ export default {
     layout_version:'v1.1.3',
     layout_current_language:'ngôn ngữ hiện tại',
     layout_current_node:'kết nối hiện tại đến Ethereum Node',
-    Layout_current_average_gas_price:'phí gas trung bình hiện tại ',
+    layout_current_average_gas_price:'phí gas trung bình hiện tại',
     layout_nav_index:'tạo mới/nhập ví',
     layout_nav_send_erc:'gửi Ether/token',
     layout_nav_check_tx:'kiểm tra thông tin giao dịch', 
