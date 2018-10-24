@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Activity</title>
+</head>
+<style>
+.container{
+  text-align: center;
+  padding:20px
+}
+
+.img_item{
+  width:100%;  
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.wait{
+  margin-top: 30px;
+  color: #7D7D7E;
+}
+
+</style>
+<body>
+    <div class="container">
+        <div class="sign">
+            <img class='img_item' src="./assets/img/signIn.png" alt="">
+        </div>
+        <div class="invite">
+            <img class='img_item' src="./assets/img/referrer.png" alt="">
+        </div>
+        <p class="wait">——更多活动敬请期待——</p>
+      </div>
+</body>
+</html>
+
+<script>
+document.querySelector('.sign').onclick=function(){
+    window.postMessage('signIn')
+}
+
+document.querySelector('.invite').onclick=function(){
+    window.postMessage('invite')
+}
+
+// function jump(ele,message){
+//         document.querySelector(ele).onclick=function(){
+//         window.postMessage(message)
+//     }
+// }
+
+</script>
