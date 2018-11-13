@@ -1,6 +1,6 @@
 export default {
     layout_app_name:'True在线钱包',
-    layout_version:'v1.1.3',
+    layout_version:'v1.1.4', 
     layout_current_language:'当前语言',
     layout_current_node:'当前连接以太坊节点',
     layout_current_average_gas_price:'当前网络平均gas价格',
