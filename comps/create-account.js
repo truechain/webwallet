@@ -59,13 +59,13 @@ class CreateAccount extends React.Component{
         this.setState({openLoading:true})
         eth_wallet_js.gen_wallet(this.state.accountPwd,res=>{
 
-            let { privatekey,address,mnemonic,keystore } = res
+            let { privatekey, address, mnemonic, ethv3_keystore } = res
             this.setState({
                 step:'save',
                 accountPrivatekey:privatekey,
                 accountAddress:address,
                 accountMnemonic:mnemonic,
-                accountKeystore:keystore,
+                accountKeystore:ethv3_keystore,
                 openSnack:true,
                 message:t.create_account_success_message, //'创建账户成功！',
                 messageType:'success',
