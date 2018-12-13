@@ -58,7 +58,7 @@ class CreateAccount extends React.Component{
         const { t } = this.props
         this.setState({openLoading:true})
         eth_wallet_js.gen_wallet(this.state.accountPwd,res=>{
-
+            
             let { privatekey, address, mnemonic, ethv3_keystore } = res
             this.setState({
                 step:'save',
@@ -79,6 +79,7 @@ class CreateAccount extends React.Component{
 
     downloadKeystore(){
         let keystore = this.state.accountKeystore
+        log('export keystore is',keystore)
         eth_wallet_js.download_keystore_file({ data:keystore })
     }
 

@@ -239,7 +239,7 @@ class ImportAccount extends React.Component{
     // 输入私钥时
     handlePrivatekeyInput(e){
         let val =  e.target.value
-        if( ( val.length == 64 ) || ( val.length == 66 && val.indexOf('0x') ) || ( val=='0x01' ) ){
+        if( ( val.length == 64 ) || ( val.length == 66 && val.indexOf('0x')== 0 ) || ( val=='0x01' ) ){
             this.setState({
                 privatekey:val,
                 showPrivatekeyBtn:true
