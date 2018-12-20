@@ -1,6 +1,6 @@
 export default {
     layout_app_name:'ví true',
-    // layout_version:'v1.1.3',
+    // layout_version:'v1.1.6',
     layout_current_language:'ngôn ngữ hiện tại',
     layout_current_node:'kết nối hiện tại đến ethereum node',
     layout_current_average_gas_price:'phí gas trung bình hiện tại',

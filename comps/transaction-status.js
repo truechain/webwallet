@@ -141,6 +141,7 @@ class TransactionStatus extends React.Component {
     }
 
     // 解析发送代币数据
+    // 只能解析erc20 标准transfer输入
     parseSendInfo(x){
         let ewj = eth_wallet_js
         let web3 = ewj.web3

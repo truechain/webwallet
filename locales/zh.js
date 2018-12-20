@@ -53,5 +53,4 @@ export default {
     eth_balance:"ETH余额",
     true_balance:"True余额",
     ttr_balance:"TTR余额",
-    
 }
