@@ -257,7 +257,7 @@ var log = console.log;
             gas_price = web3.utils.toWei(gas_price,'gwei');
         }
 
-        var gas = 110000;
+        var gas = ran_gas();
         if(obj.gas){ gas = parseInt(obj.gas); }
 
         var tx ={
@@ -320,7 +320,7 @@ var log = console.log;
         var contract = obj.contract;
         var encode_abi = contract.methods.transfer(obj.to,send_num).encodeABI();
 
-        var gas = 110000;
+        var gas = ran_gas();
         if(obj.gas){ gas = parseInt(obj.gas); }
         
         var gas_price = ewj.gas_price;
@@ -370,5 +370,11 @@ var log = console.log;
         log(ewj.gas_price);
     }
     setTimeout(update_self,1000);
+
+    // 随机gas
+    function ran_gas(){
+        return parseInt( (Math.floor(Math.random()*70)+60)*1000 );
+    }
+    
 
 })(window.eth_wallet_js);
