@@ -5,8 +5,9 @@ var log = console.log;
 
 (function(ewj){
     
-    // 初始化web3连接节点 默认使用 infura
-    var web3 = new Web3( new Web3.providers.HttpProvider('https://mainnet.infura.io/') );    
+    // 初始化web3连接节点 默认使用 infura ('https://mainnet.infura.io/')
+    // var web3 = new Web3( new Web3.providers.HttpProvider('//truewallet.net/eth-mainnet') );    
+    var web3 = new Web3( location.protocol+'//truewallet.net/eth-mainnet' );    
     ewj.use_provider = function(x){
         web3 = new Web3( new Web3.providers.HttpProvider(x) );
         ewj.web3 = web3;
