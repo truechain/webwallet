@@ -1,7 +1,0 @@
-@charset "utf-8";
-
-@media screen and (max-width:560px) {
-    .header-wrapper {
-        background: linear-gradient(to top, #4caf50, #00ACC1);                
-    }
-}   
